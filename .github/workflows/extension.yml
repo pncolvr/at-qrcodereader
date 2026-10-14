@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   package:
@@ -43,3 +43,19 @@ jobs:
           path: dist/artifacts/efatura-qr-reader-${{ steps.version.outputs.version }}.zip
           if-no-files-found: error
           retention-days: 30
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          TAG="v${VERSION}"
+          ARCHIVE="dist/artifacts/efatura-qr-reader-${VERSION}.zip"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$ARCHIVE" --clobber
+          else
+            gh release create "$TAG" "$ARCHIVE" \
+              --target "$GITHUB_SHA" \
+              --title "e-Fatura QR Reader ${VERSION}" \
+              --generate-notes
+          fi

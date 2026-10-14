@@ -67,9 +67,12 @@ build/release tooling, dependency files, TypeScript config, or its workflow. Pag
 changes do not build an extension artifact. Shared tooling or dependency changes intentionally
 trigger both workflows. Manual runs are also supported.
 
-Download the versioned artifact from **Actions**, extract the outer artifact archive,
-and upload the inner `efatura-qr-reader-<version>.zip` in the Chrome Web Store Developer
-Dashboard. The ZIP has `manifest.json` at its root. Upload only the newest artifact.
+Each successful extension workflow publishes a GitHub Release tagged `v<version>` at
+the built commit, with generated release notes and `efatura-qr-reader-<version>.zip`
+attached. Download that ZIP directly from **Releases** and upload it in the Chrome Web
+Store Developer Dashboard. The ZIP has `manifest.json` at its root. Use the newest release.
+Rerunning the same workflow replaces the ZIP on the existing release. The versioned
+**Actions** artifact is also retained for 30 days as a separate download.
 Store listing, privacy disclosures, and review remain separate requirements; CI does not upload to the store.
 
 Re-running the same Actions run rebuilds the same version; start a new manual workflow
