@@ -98,6 +98,17 @@ and lockfile. Manual versions must exceed every version already uploaded to the 
 Use **Terminal > Run Task** to build either target, package the extension, enter a manual
 version, test, or typecheck. **Ctrl+Shift+B** builds both targets.
 
+For **F5**, choose **Extension UI preview** or **Signup page** in the Run and Debug
+dropdown. Each builds its target and opens it in VS Code's integrated browser.
+The extension preview starts the real selection overlay on the QR test page. Drag a
+selection to show a fixed sample invoice response, then drag the panel by its header.
+Capture and decoding are mocked: this does not install the extension or test Chrome's
+background worker, permissions, or screenshot API. Use **Load unpacked** for those checks.
+The preview mock is built separately and is not included in the extension package.
+
+The preview is also available via **Build extension preview** or `npm run build:preview`;
+open `dist/preview/index.html` afterward. These local pages do not require a server.
+
 ## Tests
 `npm test` parses the 7 example messages from the spec, and renders each as a QR code (ECC M, 2 px
 per module, 2-module margin, as the spec asks) to check the decoder reads them back. `npm run typecheck` for types.

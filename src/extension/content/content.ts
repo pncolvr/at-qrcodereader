@@ -114,9 +114,38 @@ function showPanel(content: HTMLElement) {
   const close = el('button', { class: 'btn icon', type: 'button', textContent: '✕', ariaLabel: 'Close', title: 'Close (Esc)' });
   again.addEventListener('click', beginSelection);
   close.addEventListener('click', teardown);
+  const header = el('header', {}, el('h2', { textContent: 'e-Fatura QR' }), again, close);
   panel = el('div', { class: 'panel', role: 'dialog', ariaLabel: 'e-Fatura QR code' },
-    el('header', {}, el('h2', { textContent: 'e-Fatura QR' }), again, close),
+    header,
     el('div', { class: 'body' }, content));
+  const draggablePanel = panel;
+  let drag: { pointerId: number; offsetX: number; offsetY: number } | null = null;
+  header.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0 || drag || (event.target as Element).closest('button')) return;
+    event.preventDefault();
+    const bounds = draggablePanel.getBoundingClientRect();
+    drag = { pointerId: event.pointerId, offsetX: event.clientX - bounds.left, offsetY: event.clientY - bounds.top };
+    header.setPointerCapture(event.pointerId);
+    header.classList.add('dragging');
+  });
+  header.addEventListener('pointermove', (event) => {
+    if (!drag || event.pointerId !== drag.pointerId) return;
+    const bounds = draggablePanel.getBoundingClientRect();
+    Object.assign(draggablePanel.style, {
+      left: `${Math.max(0, Math.min(event.clientX - drag.offsetX, window.innerWidth - bounds.width))}px`,
+      top: `${Math.max(0, Math.min(event.clientY - drag.offsetY, window.innerHeight - bounds.height))}px`,
+      right: 'auto',
+    });
+  });
+  const stopDragging = (event: PointerEvent) => {
+    if (!drag || event.pointerId !== drag.pointerId) return;
+    drag = null;
+    header.classList.remove('dragging');
+    if (header.hasPointerCapture(event.pointerId)) header.releasePointerCapture(event.pointerId);
+  };
+  header.addEventListener('pointerup', stopDragging);
+  header.addEventListener('pointercancel', stopDragging);
+  header.addEventListener('lostpointercapture', stopDragging);
   root.append(panel);
 }
 

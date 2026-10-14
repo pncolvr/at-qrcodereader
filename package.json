@@ -8,6 +8,7 @@
     "build": "node scripts/build.mjs",
     "build:extension": "node scripts/build.mjs extension",
     "build:page": "node scripts/build.mjs page",
+    "build:preview": "node scripts/build.mjs preview",
     "watch": "node scripts/build.mjs extension --watch",
     "package:extension": "npm run build:extension && node scripts/extension-release.mjs package",
     "version:extension": "node scripts/extension-release.mjs version",

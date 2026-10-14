@@ -1,8 +1,8 @@
 import { build, context } from 'esbuild';
-import { cpSync, mkdirSync, rmSync } from 'node:fs';
+import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 
 const watch = process.argv.includes('--watch');
-const target = process.argv.find((argument) => ['extension', 'page'].includes(argument));
+const target = process.argv.find((argument) => ['extension', 'page', 'preview'].includes(argument));
 const outdir = 'dist/extension';
 
 if (!target || target === 'page') {
@@ -11,7 +11,7 @@ if (!target || target === 'page') {
   cpSync('src/page', 'dist/site', { recursive: true });
 }
 
-if (!target || target === 'extension') {
+if (!target || target === 'extension' || target === 'preview') {
   rmSync(outdir, { recursive: true, force: true });
   mkdirSync(outdir, { recursive: true });
   cpSync('src/extension/public', outdir, { recursive: true });
@@ -29,4 +29,22 @@ if (!target || target === 'extension') {
   } else {
     await Promise.all(configs.map((config) => build(config)));
   }
+}
+
+if (target === 'preview') {
+  const previewDir = 'dist/preview';
+  rmSync(previewDir, { recursive: true, force: true });
+  mkdirSync(previewDir, { recursive: true });
+  const fixture = readFileSync('tests/test-qr-all-fields.html', 'utf8');
+  writeFileSync(`${previewDir}/index.html`, fixture.replace('</body>', '<script src="./preview.js"></script>\n</body>'));
+  await build({
+    entryPoints: ['test/preview.ts'],
+    outfile: `${previewDir}/preview.js`,
+    bundle: true,
+    format: 'iife',
+    target: 'chrome112',
+    sourcemap: true,
+    loader: { '.css': 'text' },
+    logLevel: 'info',
+  });
 }

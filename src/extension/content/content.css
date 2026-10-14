@@ -7,7 +7,8 @@
   overflow: auto; background: var(--surface); color: var(--text); border: 1px solid var(--line); border-radius: 8px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, .3); pointer-events: auto; font: 14px/1.45 system-ui, sans-serif;
 }
-.panel > header { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; gap: .5rem; padding: .5rem .6rem .5rem .8rem; background: var(--surface); border-bottom: 1px solid var(--line); }
+.panel > header { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; gap: .5rem; padding: .5rem .6rem .5rem .8rem; background: var(--surface); border-bottom: 1px solid var(--line); cursor: grab; touch-action: none; user-select: none; }
+.panel > header.dragging { cursor: grabbing; }
 .panel h2 { flex: 1; margin: 0; font-size: .95rem; font-weight: 650; }
 .panel .body { padding: .75rem; }
 .panel .btn.icon { min-width: 0; padding: .22rem .5rem; }

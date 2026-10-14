@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Extension UI preview",
+      "type": "editor-browser",
+      "request": "launch",
+      "url": "file://${workspaceFolder}/dist/preview/index.html",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "Build extension preview"
+    },
+    {
+      "name": "Signup page",
+      "type": "editor-browser",
+      "request": "launch",
+      "url": "file://${workspaceFolder}/dist/site/index.html",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "Build signup page"
+    }
+  ]
+}

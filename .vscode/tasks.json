@@ -21,6 +21,12 @@
       "problemMatcher": []
     },
     {
+      "label": "Build extension preview",
+      "type": "npm",
+      "script": "build:preview",
+      "problemMatcher": []
+    },
+    {
       "label": "Package Chrome Store ZIP",
       "type": "npm",
       "script": "package:extension",
