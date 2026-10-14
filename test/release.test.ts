@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -11,8 +11,14 @@ let directory: string;
 beforeEach(() => {
   directory = mkdtempSync(join(tmpdir(), 'efatura-release-'));
   mkdirSync(join(directory, 'src/extension/public'), { recursive: true });
-  for (const path of ['package.json', 'package-lock.json', manifestPath]) {
-    cpSync(path, join(directory, path));
+  const version = '0.1.0';
+  const fixtures = {
+    'package.json': { version },
+    'package-lock.json': { version, packages: { '': { version } } },
+    [manifestPath]: { version },
+  };
+  for (const [path, data] of Object.entries(fixtures)) {
+    writeFileSync(join(directory, path), JSON.stringify(data));
   }
 });
 
