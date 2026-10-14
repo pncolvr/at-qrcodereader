@@ -6,7 +6,11 @@
   "description": "Chrome extension: select a region of the current tab, decode an e-Fatura QR code and show its fields in a table.",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "watch": "node scripts/build.mjs --watch",
+    "build:extension": "node scripts/build.mjs extension",
+    "build:page": "node scripts/build.mjs page",
+    "watch": "node scripts/build.mjs extension --watch",
+    "package:extension": "npm run build:extension && node scripts/extension-release.mjs package",
+    "version:extension": "node scripts/extension-release.mjs version",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },

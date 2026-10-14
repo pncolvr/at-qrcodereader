@@ -1,6 +1,6 @@
 import QRCode from 'qrcode';
 import { describe, expect, it } from 'vitest';
-import { decodeQr, decodeWithRetries, type RawImage } from '../src/core/decode';
+import { decodeQr, decodeWithRetries, type RawImage } from '../src/extension/core/decode';
 import { EXAMPLES } from './fixtures';
 
 // Render a QR as RGBA at `px` pixels per module with `margin` modules of quiet zone.

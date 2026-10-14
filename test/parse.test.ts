@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { parseMessage } from '../src/core/parse';
-import { classifyQr } from '../src/core/detect';
+import { parseMessage } from '../src/extension/core/parse';
+import { classifyQr } from '../src/extension/core/detect';
 import { EXAMPLES } from './fixtures';
 
 describe('parseMessage', () => {

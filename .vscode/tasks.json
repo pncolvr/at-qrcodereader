@@ -1,0 +1,57 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build all",
+      "type": "npm",
+      "script": "build",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build extension",
+      "type": "npm",
+      "script": "build:extension",
+      "problemMatcher": []
+    },
+    {
+      "label": "Build signup page",
+      "type": "npm",
+      "script": "build:page",
+      "problemMatcher": []
+    },
+    {
+      "label": "Package Chrome Store ZIP",
+      "type": "npm",
+      "script": "package:extension",
+      "problemMatcher": []
+    },
+    {
+      "label": "Bump extension version (manual alternative)",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "version:extension", "--", "${input:extensionVersion}"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Test",
+      "type": "npm",
+      "script": "test",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Typecheck",
+      "type": "npm",
+      "script": "typecheck",
+      "problemMatcher": "$tsc"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "extensionVersion",
+      "type": "promptString",
+      "description": "New manual Chrome Store version (must increase)"
+    }
+  ]
+}
