@@ -1,0 +1,28 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f3f5f7; --surface: #fff; --text: #16202a; --muted: #5a6672; --line: #d8dee5; --accent: #1f5fbf; --accent-soft: rgba(31, 95, 191, .14);
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #11151a; --surface: #1a2027; --text: #e6eaee; --muted: #9aa6b2; --line: #2c353f; --accent: #6ea8ff; --accent-soft: rgba(110, 168, 255, .18); }
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; display: flex; flex-direction: column; background: var(--bg); color: var(--text); font: 15px/1.45 system-ui, sans-serif; }
+header { flex: none; display: flex; align-items: baseline; gap: 1rem; padding: .75rem 1.25rem; border-bottom: 1px solid var(--line); background: var(--surface); }
+h1 { margin: 0; font-size: 1.05rem; font-weight: 650; }
+#hint { margin: 0; color: var(--muted); }
+
+/* The capture takes all the remaining width; the result column has a fixed, readable width. */
+main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) clamp(340px, 30vw, 480px); }
+@media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+
+#capture { min-width: 0; min-height: 0; overflow: auto; padding: 1rem; }
+#stage { position: relative; width: 100%; line-height: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); cursor: crosshair; touch-action: none; user-select: none; }
+#shot { display: block; width: 100%; height: auto; user-select: none; -webkit-user-drag: none; }
+#sel { position: absolute; border: 2px solid var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 9999px rgba(0, 0, 0, .35); pointer-events: none; }
+#empty { margin: 0; padding: 2rem 1rem; border: 1px dashed var(--line); border-radius: 6px; color: var(--muted); }
+body.dragover #capture { outline: 2px dashed var(--accent); outline-offset: -6px; }
+
+#result { min-height: 0; overflow: auto; padding: 1rem; border-left: 1px solid var(--line); background: var(--surface); }
+@media (max-width: 900px) { #result { border-left: 0; border-top: 1px solid var(--line); } }
+.placeholder { margin: 0; color: var(--muted); }
