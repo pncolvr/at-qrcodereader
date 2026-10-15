@@ -11,7 +11,18 @@
 .atqr { color: var(--text); font: 14px/1.45 system-ui, sans-serif; }
 .atqr *, .btn { box-sizing: border-box; }
 .atqr .status { margin: 0 0 .7rem; padding: .55rem .75rem; border-radius: 6px; background: var(--page); border: 1px solid var(--line); }
+.atqr .status { display: flex; align-items: center; justify-content: space-between; gap: .7rem; }
 .atqr .status.warn { background: var(--warn-bg); border-color: transparent; color: var(--warn); }
+.atqr .status-title { min-width: 0; }
+.atqr .validity { position: relative; display: inline-grid; place-items: center; flex: 0 0 1.35rem; width: 1.35rem; height: 1.35rem; border: 1px solid currentColor; border-radius: 50%; cursor: help; }
+.atqr .validity.is-valid { color: var(--accent); }
+.atqr .validity.is-invalid { color: var(--warn); background: var(--warn-bg); }
+.atqr .validity:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.atqr .validity-icon { font-size: .8rem; font-weight: 700; line-height: 1; }
+.atqr .validity-tooltip { position: absolute; top: calc(100% + .5rem); right: 0; z-index: 5; display: grid; gap: .35rem; width: max-content; max-width: min(18rem, calc(100vw - 2rem)); max-height: 12rem; overflow: auto; padding: .65rem .75rem; border: 1px solid var(--line); border-radius: 5px; background: var(--text); color: var(--surface); box-shadow: 0 5px 16px rgb(0 0 0 / .2); font-size: .78rem; font-weight: 400; line-height: 1.4; white-space: normal; opacity: 0; visibility: hidden; transform: translateY(-3px); transition: opacity .14s ease, transform .14s ease, visibility .14s; }
+.atqr .validity:hover .validity-tooltip, .atqr .validity:focus-visible .validity-tooltip { opacity: 1; visibility: visible; transform: translateY(0); }
+.atqr .validity-tooltip ul { margin: .1rem 0 0; padding-inline-start: 1.1rem; }
+.atqr .validity-tooltip li + li { margin-top: .25rem; }
 .atqr .problems { margin: 0 0 .7rem; padding: .55rem .75rem .55rem 1.5rem; border-radius: 6px; background: var(--warn-bg); color: var(--warn); font-size: .85rem; }
 .atqr table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
 .atqr th, .atqr td { padding: .45rem .6rem; text-align: left; vertical-align: top; border-top: 1px solid var(--line); font-size: inherit; }

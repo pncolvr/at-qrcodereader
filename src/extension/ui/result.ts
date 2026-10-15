@@ -35,10 +35,34 @@ export function renderResult(text: string | null): HTMLElement {
     return renderNotice(`A QR code was found, but it is not an AT QR code (${kind === 'url' ? 'it contains a link' : 'it contains plain text'}).`, true);
   }
   const parsed = parseMessage(text);
-  const out = wrap(status(`AT QR code · ${parsed.fields.length} fields`));
+  const issues = [
+    ...parsed.warnings,
+    ...parsed.fields.flatMap((field) => field.warnings.map((warning) => `${field.code}: ${warning}`)),
+  ];
+  const out = wrap(el('p', {
+    class: issues.length ? 'status warn' : 'status',
+  },
+  el('span', { class: 'status-title', textContent: `AT QR code · ${parsed.fields.length} fields` }),
+  validityIndicator(issues)));
   if (parsed.warnings.length) out.append(el('ul', { class: 'problems' }, ...parsed.warnings.map((w) => el('li', { textContent: w }))));
   out.append(buildTable(parsed));
   return out;
+}
+
+function validityIndicator(issues: string[]) {
+  const valid = issues.length === 0;
+  const tooltip = el('span', { class: 'validity-tooltip', id: 'at-qr-validity-tooltip', role: 'tooltip' },
+    el('strong', { textContent: valid ? 'Valid AT QR format' : 'Invalid AT QR format' }),
+    el('span', { textContent: valid ? 'No format issues found.' : 'See flagged fields below.' }));
+  const indicator = el('span', {
+    class: valid ? 'validity is-valid' : 'validity is-invalid',
+    role: 'img',
+    tabIndex: 0,
+    ariaLabel: valid ? 'Valid AT QR format' : `Invalid AT QR format, ${issues.length} issue${issues.length === 1 ? '' : 's'}`,
+  },
+  el('span', { class: 'validity-icon', textContent: valid ? '✓' : '!' }), tooltip);
+  indicator.setAttribute('aria-describedby', 'at-qr-validity-tooltip');
+  return indicator;
 }
 
 function buildTable(parsed: ParseResult) {

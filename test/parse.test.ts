@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parseMessage } from '../src/extension/core/parse';
 import { classifyQr } from '../src/extension/core/detect';
-import { EXAMPLES } from './fixtures';
+import { EXAMPLES, INVALID_EXAMPLE } from './fixtures';
 
 describe('parseMessage', () => {
   for (const [name, msg] of Object.entries(EXAMPLES)) {
@@ -42,6 +42,15 @@ describe('parseMessage', () => {
     expect(all).toMatch(/more than once/);
     expect(all).toMatch(/Empty segment/);
     expect(all).toMatch(/Missing required field O/);
+  });
+
+  it('flags an AT payload with invalid values and missing fields', () => {
+    const r = parseMessage(INVALID_EXAMPLE);
+    const all = r.fields.flatMap((field) => field.warnings).join('|') + r.warnings.join('|');
+    expect(all).toMatch(/valid calendar date/);
+    expect(all).toMatch(/two decimals/);
+    expect(all).toMatch(/Missing required field C/);
+    expect(parseMessage('S:').fields[0].warnings).toContain('Value must not be empty.');
   });
 
   it('flags out-of-order fields', () => {
