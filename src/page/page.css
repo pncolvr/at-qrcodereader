@@ -4,7 +4,7 @@
   color-scheme: light;
   --ink: #202723;
   --muted: #53645b;
-  --green: #17634b;
+  --blue: #4f87bd;
   --accent: #cf5047;
   --line: #dce4df;
   font-family: 'DM Sans', sans-serif;
@@ -14,8 +14,8 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; border-top: 6px solid var(--green); }
-body::before { content: ''; position: fixed; inset: 0; z-index: -1; background-image: linear-gradient(#17634b05 1px, transparent 1px), linear-gradient(90deg, #17634b05 1px, transparent 1px); background-size: 32px 32px; }
+body { margin: 0; border-top: 6px solid var(--blue); }
+body::before { content: ''; position: fixed; inset: 0; z-index: -1; background-image: linear-gradient(#4f87bd08 1px, transparent 1px), linear-gradient(90deg, #4f87bd08 1px, transparent 1px); background-size: 32px 32px; }
 .page { max-width: 1000px; margin: auto; padding: 0 48px; }
 header { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 30px 0; border-bottom: 1px solid var(--line); }
 .wordmark { color: var(--ink); text-decoration: none; font-weight: 700; font-size: 17px; }
@@ -24,10 +24,10 @@ header { display: flex; justify-content: space-between; align-items: center; gap
 .languages label { position: relative; cursor: pointer; }
 .languages input { position: absolute; opacity: 0; }
 .languages span { display: grid; place-items: center; width: 40px; height: 36px; font-size: 12px; font-weight: 700; border-radius: 4px; color: var(--muted); }
-.languages input:checked + span { background: var(--green); color: white; }
+.languages input:checked + span { background: var(--blue); color: white; }
 .languages input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 3px; }
 main { position: relative; padding: 58px 0 60px; max-width: 740px; }
-.status { display: flex; align-items: center; gap: 9px; color: var(--green); font-size: 12px; font-weight: 700; text-transform: uppercase; }
+.status { display: flex; align-items: center; gap: 9px; color: var(--blue); font-size: 12px; font-weight: 700; text-transform: uppercase; }
 .status-mark { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; }
 .product-icon { display: block; margin-top: 30px; object-fit: contain; }
 h1 { font-family: 'DM Serif Display', Georgia, serif; font-size: 64px; line-height: 1.06; font-weight: 400; margin: 20px 0; overflow-wrap: anywhere; }
@@ -36,8 +36,8 @@ h1 { font-family: 'DM Serif Display', Georgia, serif; font-size: 64px; line-heig
 .signup { margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line); }
 h2 { font-size: 21px; line-height: 1.4; font-weight: 600; margin: 0 0 12px; }
 .signup p { max-width: 570px; line-height: 1.65; margin: 0; }
-.signup-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 26px; max-width: 100%; margin: 22px 0 16px; padding: 15px 20px; background: var(--green); color: white; border-radius: 4px; text-decoration: none; font-size: 15px; font-weight: 600; }
-.signup-link:hover { background: #114d3a; }
+.signup-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 26px; max-width: 100%; margin: 22px 0 16px; padding: 15px 20px; background: var(--blue); color: white; border-radius: 4px; text-decoration: none; font-size: 15px; font-weight: 600; }
+.signup-link:hover { background: #356b9f; }
 a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
 .signup .privacy { color: var(--muted); font-size: 13px; }
 .signup .provider { margin-top: 8px; font-size: 12px; color: var(--muted); }

@@ -7,10 +7,10 @@ async function flagError(message: string) {
   console.error(message);
   await chrome.action.setBadgeBackgroundColor({ color: '#b3261e' });
   await chrome.action.setBadgeText({ text: '!' });
-  await chrome.action.setTitle({ title: `e-Fatura QR: ${message}` });
+  await chrome.action.setTitle({ title: `AT QR: ${message}` });
   setTimeout(() => {
     chrome.action.setBadgeText({ text: '' });
-    chrome.action.setTitle({ title: 'Read e-Fatura QR code' });
+    chrome.action.setTitle({ title: 'Read AT QR code' });
   }, 4000);
 }
 

@@ -39,8 +39,8 @@ jobs:
         run: node -e 'console.log("version=" + JSON.parse(require("fs").readFileSync("src/extension/public/manifest.json", "utf8")).version)' >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with:
-          name: efatura-qr-reader-${{ steps.version.outputs.version }}
-          path: dist/artifacts/efatura-qr-reader-${{ steps.version.outputs.version }}.zip
+          name: at-qr-reader-${{ steps.version.outputs.version }}
+          path: dist/artifacts/at-qr-reader-${{ steps.version.outputs.version }}.zip
           if-no-files-found: error
           retention-days: 30
       - name: Publish GitHub Release
@@ -50,12 +50,12 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           TAG="v${VERSION}"
-          ARCHIVE="dist/artifacts/efatura-qr-reader-${VERSION}.zip"
+          ARCHIVE="dist/artifacts/at-qr-reader-${VERSION}.zip"
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" "$ARCHIVE" --clobber
           else
             gh release create "$TAG" "$ARCHIVE" \
               --target "$GITHUB_SHA" \
-              --title "e-Fatura QR Reader ${VERSION}" \
+              --title "AT QR Reader ${VERSION}" \
               --generate-notes
           fi

@@ -10,7 +10,7 @@ const translations = {
     provider: 'Signup opens Google Forms. Your email is collected there, not on this website.',
     newTab: ' (opens in a new tab)',
     footer: 'Made for the details that matter.',
-    pageTitle: 'e-Fatura QR Reader | Coming soon',
+    pageTitle: 'AT QR Reader | Coming soon',
   },
   pt: {
     language: 'Idioma',
@@ -23,7 +23,7 @@ const translations = {
     provider: 'A inscrição abre o Google Forms. O seu email é recolhido lá, não neste site.',
     newTab: ' (abre num novo separador)',
     footer: 'Feito para os detalhes que importam.',
-    pageTitle: 'e-Fatura QR Reader | Em breve',
+    pageTitle: 'AT QR Reader | Em breve',
   },
 };
 

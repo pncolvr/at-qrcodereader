@@ -1,4 +1,4 @@
-// Field table for the e-Fatura QR code.
+// Field table for the AT QR code.
 // Source: "Especificações Técnicas – Código de Barras Bidimensional – Código QR",
 // Portaria n.º 195/2020, v1.1 (Oct 2020), section 4. The order here is the order
 // the fields must appear in the message.

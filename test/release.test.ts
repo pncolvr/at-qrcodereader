@@ -9,7 +9,7 @@ const manifestPath = 'src/extension/public/manifest.json';
 let directory: string;
 
 beforeEach(() => {
-  directory = mkdtempSync(join(tmpdir(), 'efatura-release-'));
+  directory = mkdtempSync(join(tmpdir(), 'at-qr-release-'));
   mkdirSync(join(directory, 'src/extension/public'), { recursive: true });
   const version = '0.1.0';
   const fixtures = {

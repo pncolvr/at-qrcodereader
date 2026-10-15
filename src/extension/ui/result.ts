@@ -18,7 +18,7 @@ export function el<K extends keyof HTMLElementTagNameMap>(
   return node;
 }
 
-const wrap = (...kids: Node[]) => el('div', { class: 'efq' }, ...kids);
+const wrap = (...kids: Node[]) => el('div', { class: 'atqr' }, ...kids);
 const status = (message: string, warn = false) => el('p', { class: warn ? 'status warn' : 'status', textContent: message });
 
 export function renderNotice(message: string, warn = false): HTMLElement {
@@ -31,11 +31,11 @@ export function renderResult(text: string | null): HTMLElement {
     return renderNotice('No QR code found in the selection. Select a tighter area around the code, or zoom the page in and try again.', true);
   }
   const kind = classifyQr(text);
-  if (kind !== 'efatura') {
-    return renderNotice(`A QR code was found, but it is not an e-Fatura code (${kind === 'url' ? 'it contains a link' : 'it contains plain text'}).`, true);
+  if (kind !== 'at') {
+    return renderNotice(`A QR code was found, but it is not an AT QR code (${kind === 'url' ? 'it contains a link' : 'it contains plain text'}).`, true);
   }
   const parsed = parseMessage(text);
-  const out = wrap(status(`e-Fatura QR code · ${parsed.fields.length} fields`));
+  const out = wrap(status(`AT QR code · ${parsed.fields.length} fields`));
   if (parsed.warnings.length) out.append(el('ul', { class: 'problems' }, ...parsed.warnings.map((w) => el('li', { textContent: w }))));
   out.append(buildTable(parsed));
   return out;

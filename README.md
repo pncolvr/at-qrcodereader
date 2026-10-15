@@ -1,7 +1,7 @@
-# e-Fatura QR Reader
+# AT QR Reader
 
 Chrome (MV3) extension. Click the toolbar button (or press Alt+Shift+Q) on a page, drag over
-the QR code right on the page, and a panel appears with the e-Fatura fields as a table with a Copy
+the QR code right on the page, and a panel appears with the AT QR fields as a table with a Copy
 button on each row.
 
 ## Build and try it
@@ -32,7 +32,7 @@ All extension source and static assets live under `src/extension/`. The independ
 3. The worker takes `captureVisibleTab`, crops the selection (CSS px to device px) and decodes it with jsQR
    (`src/extension/chrome/capture.ts`; retries at 1x, 2x, 3x, 0.5x and with inverted colours).
 4. The overlay shows the result in a panel inside a closed shadow root, so page CSS can't affect it.
-5. `src/extension/core/` classifies the text (e-Fatura / link / other) and parses it with the field table in
+5. `src/extension/core/` classifies the text (AT QR / link / other) and parses it with the field table in
    `fields.ts`, taken from the AT spec (Portaria n.º 195/2020, v1.1, Oct 2020). `src/extension/ui/` renders the table.
 
 ## Signup page
@@ -68,7 +68,7 @@ changes do not build an extension artifact. Shared tooling or dependency changes
 trigger both workflows. Manual runs are also supported.
 
 Each successful extension workflow publishes a GitHub Release tagged `v<version>` at
-the built commit, with generated release notes and `efatura-qr-reader-<version>.zip`
+the built commit, with generated release notes and `at-qr-reader-<version>.zip`
 attached. Download that ZIP directly from **Releases** and upload it in the Chrome Web
 Store Developer Dashboard. The ZIP has `manifest.json` at its root. Use the newest release.
 Rerunning the same workflow replaces the ZIP on the existing release. The versioned
@@ -87,7 +87,7 @@ For local builds, the committed version is used:
 npm run package:extension
 ```
 
-The ZIP is written to `dist/artifacts/efatura-qr-reader-<version>.zip`. Production builds
+The ZIP is written to `dist/artifacts/at-qr-reader-<version>.zip`. Production builds
 are minified and exclude source maps; watch builds include source maps for debugging.
 The manual alternative is described in workflow comments: disable the automatic step,
 then use `npm run version:extension -- <version>` to synchronize the manifest, package,

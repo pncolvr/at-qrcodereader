@@ -1,9 +1,9 @@
 {
-  "name": "efatura-qr-reader",
+  "name": "at-qr-reader",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Chrome extension: select a region of the current tab, decode an e-Fatura QR code and show its fields in a table.",
+  "description": "Chrome extension: select a region of the current tab, decode an AT QR code and show its fields in a table.",
   "scripts": {
     "build": "node scripts/build.mjs",
     "build:extension": "node scripts/build.mjs extension",

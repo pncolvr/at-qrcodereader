@@ -22,7 +22,7 @@ const DATE_RE = /^\d{8}$/;
 const clip = (s: string) => (s.length > 24 ? s.slice(0, 24) + '…' : s);
 
 /**
- * Parse an e-Fatura QR message: fields joined by "*", each as "CODE:value".
+ * Parse an AT QR message: fields joined by "*", each as "CODE:value".
  * Split on the FIRST ":" only, since values (e.g. field S) may contain ":".
  * Never throws; problems are reported as warnings so the user still sees the data.
  */

@@ -7,7 +7,7 @@ import css from './content.css';
 interface CaptureResponse { ok: boolean; text?: string | null; error?: string }
 
 const MIN_SELECTION_PX = 8;
-const GUARD = '__efaturaQrReader';
+const GUARD = '__atQrReader';
 
 let host: HTMLElement | null = null;
 let root: ShadowRoot | null = null;
@@ -27,7 +27,7 @@ function onKey(e: KeyboardEvent) {
 function start() {
   teardown();
   host = el('div');
-  host.id = 'efatura-qr-reader-host';
+  host.id = 'at-qr-reader-host';
   // `all: initial` stops the page's inherited styles (font, color, ...) leaking into the shadow tree.
   host.style.cssText = 'all:initial;position:fixed;inset:0;z-index:2147483647;pointer-events:none;';
   root = host.attachShadow({ mode: 'closed' });
@@ -114,8 +114,8 @@ function showPanel(content: HTMLElement) {
   const close = el('button', { class: 'btn icon', type: 'button', textContent: '✕', ariaLabel: 'Close', title: 'Close (Esc)' });
   again.addEventListener('click', beginSelection);
   close.addEventListener('click', teardown);
-  const header = el('header', {}, el('h2', { textContent: 'e-Fatura QR' }), again, close);
-  panel = el('div', { class: 'panel', role: 'dialog', ariaLabel: 'e-Fatura QR code' },
+  const header = el('header', {}, el('h2', { textContent: 'AT QR' }), again, close);
+  panel = el('div', { class: 'panel', role: 'dialog', ariaLabel: 'AT QR code' },
     header,
     el('div', { class: 'body' }, content));
   const draggablePanel = panel;

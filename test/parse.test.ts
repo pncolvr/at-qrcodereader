@@ -51,8 +51,8 @@ describe('parseMessage', () => {
 });
 
 describe('classifyQr', () => {
-  it('recognises all spec examples as e-Fatura', () => {
-    for (const msg of Object.values(EXAMPLES)) expect(classifyQr(msg)).toBe('efatura');
+  it('recognises all spec examples as AT QR messages', () => {
+    for (const msg of Object.values(EXAMPLES)) expect(classifyQr(msg)).toBe('at');
   });
   it('rejects other QR content', () => {
     expect(classifyQr('https://example.com/x')).toBe('url');

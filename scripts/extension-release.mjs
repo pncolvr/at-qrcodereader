@@ -60,7 +60,7 @@ if (command === 'version') {
     const builtManifest = readJson('dist/extension/manifest.json');
     if (builtManifest.version !== manifest.version) throw new Error('Rebuild the extension before packaging.');
     mkdirSync('dist/artifacts', { recursive: true });
-    const archive = resolve(`dist/artifacts/efatura-qr-reader-${manifest.version}.zip`);
+    const archive = resolve(`dist/artifacts/at-qr-reader-${manifest.version}.zip`);
     rmSync(archive, { force: true });
     execFileSync('zip', ['-r', archive, '.'], { cwd: 'dist/extension', stdio: 'inherit' });
     console.log(archive);
