@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parseMessage } from '../src/extension/core/parse';
 import { classifyQr } from '../src/extension/core/detect';
+import { FIELD_DEFS } from '../src/extension/core/fields';
 import { EXAMPLES, INVALID_EXAMPLE } from './fixtures';
 
 describe('parseMessage', () => {
@@ -63,9 +64,22 @@ describe('classifyQr', () => {
   it('recognises all spec examples as AT QR messages', () => {
     for (const msg of Object.values(EXAMPLES)) expect(classifyQr(msg)).toBe('at');
   });
+  it('recognises the invalid fixture so its fields and warnings can be displayed', () => {
+    expect(classifyQr(INVALID_EXAMPLE)).toBe('at');
+  });
+  it.each(FIELD_DEFS.filter((field) => field.required))('recognises an invoice missing required field $code', ({ code }) => {
+    const incomplete = EXAMPLES.simplificada.split('*').filter((segment) => !segment.startsWith(`${code}:`)).join('*');
+    expect(classifyQr(incomplete)).toBe('at');
+    expect(parseMessage(incomplete).warnings.join('|')).toContain(`Missing required field ${code} (`);
+  });
+  it('recognises out-of-order and empty fields for validation', () => {
+    expect(classifyQr('O:1.00*F:*A:')).toBe('at');
+  });
   it('rejects other QR content', () => {
     expect(classifyQr('https://example.com/x')).toBe('url');
     expect(classifyQr('hello')).toBe('text');
     expect(classifyQr('A:123456789*B:999999990')).toBe('text'); // prefix alone is not enough
+    expect(classifyQr('A:1*A:2*B:3')).toBe('text'); // duplicates do not add evidence
+    expect(classifyQr('https://example.com/*A:1*B:2*D:FT')).toBe('url');
   });
 });

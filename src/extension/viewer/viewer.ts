@@ -1,5 +1,6 @@
 import { cropSource } from '../core/crop';
 import { decodeWithRetries } from '../core/decode';
+import { i18n, localizeDocument } from '../i18n';
 import { el, renderResult, resultCss } from '../ui/result';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -9,27 +10,28 @@ const sel = $<HTMLDivElement>('sel');
 const empty = $<HTMLParagraphElement>('empty');
 const result = $<HTMLElement>('result');
 
+localizeDocument();
 document.head.append(el('style', { textContent: resultCss }));
 
 const MIN_SELECTION_PX = 8;
 
 function placeholder() {
-  result.replaceChildren(el('p', { class: 'placeholder', textContent: 'Select the QR code on the capture to see its fields here.' }));
+  result.replaceChildren(el('p', { class: 'placeholder', textContent: i18n('viewerPlaceholder') }));
 }
 
 // ---- loading an image -------------------------------------------------------
 
 async function loadImage(src: string) {
   shot.src = src;
-  try { await shot.decode(); } catch { return showEmpty('That image could not be loaded.'); }
+  try { await shot.decode(); } catch { return showEmpty(i18n('imageLoadFailed')); }
   empty.hidden = true;
   stage.hidden = false;
   clearSelection();
   placeholder();
 }
 
-function showEmpty(message?: string) {
-  if (message) empty.textContent = message;
+function showEmpty(message = i18n('noCapture')) {
+  empty.textContent = message;
   empty.hidden = false;
   stage.hidden = true;
 }

@@ -1,0 +1,154 @@
+{
+  "extensionName": {
+    "message": "AT QR Reader"
+  },
+  "extensionDescription": {
+    "message": "Select an AT QR code on the current page and see its fields in a table."
+  },
+  "actionTitle": {
+    "message": "Read AT QR code"
+  },
+  "actionError": {
+    "message": "AT QR: $message$",
+    "placeholders": { "message": { "content": "$1" } }
+  },
+  "captureFailed": {
+    "message": "Could not capture this page."
+  },
+  "selectionHint": {
+    "message": "Drag over the QR code · Esc to cancel"
+  },
+  "extensionReloaded": {
+    "message": "The extension was reloaded. Refresh this page and try again."
+  },
+  "selectAgain": {
+    "message": "Select again"
+  },
+  "close": {
+    "message": "Close"
+  },
+  "closeWithEscape": {
+    "message": "Close (Esc)"
+  },
+  "dialogLabel": {
+    "message": "AT QR code"
+  },
+  "noQrFound": {
+    "message": "No QR code found in the selection. Select a tighter area around the code, or zoom the page in and try again."
+  },
+  "invalidQr": {
+    "message": "A QR code was found, but it is not a valid AT QR code."
+  },
+  "improvementMessage": {
+    "message": "We're working on a new version and a native Windows app.\nWant to know more?"
+  },
+  "improvementLink": {
+    "message": "Click here"
+  },
+  "improvementLinkNewTab": {
+    "message": "Learn more (opens in a new tab)"
+  },
+  "qrFieldCount": {
+    "message": "AT QR code · $count$ fields",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "qrInvalidFieldCount": {
+    "message": "AT QR code · invalid · $count$ fields",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "formatValid": {
+    "message": "Valid AT QR format"
+  },
+  "formatInvalid": {
+    "message": "Invalid AT QR format"
+  },
+  "formatNoIssues": {
+    "message": "No format issues found."
+  },
+  "formatSeeIssues": {
+    "message": "See flagged fields below."
+  },
+  "formatInvalidAriaOne": {
+    "message": "Invalid AT QR format, one issue"
+  },
+  "formatInvalidAriaMany": {
+    "message": "Invalid AT QR format, $count$ issues",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "copy": {
+    "message": "Copy"
+  },
+  "copied": {
+    "message": "Copied"
+  },
+  "copyField": {
+    "message": "Copy $field$",
+    "placeholders": { "field": { "content": "$1" } }
+  },
+  "warningMalformedSegment": {
+    "message": "Malformed segment \"$segment$\" (expected CODE:value).",
+    "placeholders": { "segment": { "content": "$1" } }
+  },
+  "warningTooLong": {
+    "message": "Longer than the maximum of $length$ characters.",
+    "placeholders": { "length": { "content": "$1" } }
+  },
+  "warningMissingField": {
+    "message": "Missing required field $code$ ($field$).",
+    "placeholders": {
+      "code": { "content": "$1" },
+      "field": { "content": "$2" }
+    }
+  },
+  "warningEmptySegment": {
+    "message": "Empty segment (stray \"*\")."
+  },
+  "warningUnknownField": {
+    "message": "Not a field defined in the specification."
+  },
+  "warningEmptyValue": {
+    "message": "Value must not be empty."
+  },
+  "warningMoney": {
+    "message": "Expected a number with two decimals (e.g. 12.34)."
+  },
+  "warningDateFormat": {
+    "message": "Expected a date as YYYYMMDD."
+  },
+  "warningInvalidDate": {
+    "message": "Expected a valid calendar date."
+  },
+  "warningOrder": {
+    "message": "Out of order compared to the specification."
+  },
+  "warningDuplicate": {
+    "message": "Appears more than once."
+  },
+  "otherFields": {
+    "message": "Other"
+  },
+  "viewerTitle": {
+    "message": "AT QR Reader"
+  },
+  "viewerHint": {
+    "message": "Drag over the QR code to select it."
+  },
+  "captureLabel": {
+    "message": "Page capture"
+  },
+  "captureAlt": {
+    "message": "Capture of the page"
+  },
+  "noCapture": {
+    "message": "No capture loaded. Click the extension button on a page, or paste or drop an image here."
+  },
+  "resultLabel": {
+    "message": "QR code contents"
+  },
+  "viewerPlaceholder": {
+    "message": "Select the QR code on the capture to see its fields here."
+  },
+  "imageLoadFailed": {
+    "message": "That image could not be loaded."
+  }
+}

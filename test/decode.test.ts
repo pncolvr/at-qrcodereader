@@ -1,7 +1,12 @@
 import QRCode from 'qrcode';
+import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { describe, expect, it } from 'vitest';
 import { decodeQr, decodeWithRetries, type RawImage } from '../src/extension/core/decode';
-import { EXAMPLES } from './fixtures';
+import { EXAMPLES, INVALID_EXAMPLE } from './fixtures';
+
+// Use qrcode's own PNG reader to verify the actual embedded fixture, including CRCs.
+const { PNG } = createRequire(import.meta.resolve('qrcode'))('pngjs');
 
 // Render a QR as RGBA at `px` pixels per module with `margin` modules of quiet zone.
 // The spec asks for ECC M, byte mode, 2 px/module and a 2-module (0.25 cm) margin.
@@ -34,6 +39,14 @@ function nearest(img: RawImage, scale: number): RawImage {
 }
 
 describe('decoding', () => {
+  it('decodes the invalid fixture image to its printed payload', () => {
+    const html = readFileSync(new URL('../tests/test-qr-invalid.html', import.meta.url), 'utf8');
+    const encoded = html.match(/src="data:image\/png;base64,([^"]+)"/)![1];
+    const png = PNG.sync.read(Buffer.from(encoded, 'base64'));
+    expect(html).toContain(`<code>${INVALID_EXAMPLE}</code>`);
+    expect(decodeQr({ ...png, data: new Uint8ClampedArray(png.data) })).toBe(INVALID_EXAMPLE);
+  });
+
   for (const [name, msg] of Object.entries(EXAMPLES)) {
     it(`decodes spec example "${name}" at spec settings`, () => {
       expect(decodeQr(render(msg))).toBe(msg);

@@ -3,6 +3,8 @@
 // panel on the page. Everything lives in a closed shadow root so page CSS can't interfere.
 import { el, renderNotice, renderResult, resultCss } from '../ui/result';
 import css from './content.css';
+import { listenForEscape } from './escape';
+import { i18n } from '../i18n';
 
 interface CaptureResponse { ok: boolean; text?: string | null; error?: string }
 
@@ -13,15 +15,13 @@ let host: HTMLElement | null = null;
 let root: ShadowRoot | null = null;
 let layer: HTMLElement | null = null;
 let panel: HTMLElement | null = null;
+let stopListeningForEscape: (() => void) | null = null;
 
 function teardown() {
   host?.remove();
   host = root = layer = panel = null;
-  window.removeEventListener('keydown', onKey, true);
-}
-
-function onKey(e: KeyboardEvent) {
-  if (e.key === 'Escape') { e.stopPropagation(); teardown(); }
+  stopListeningForEscape?.();
+  stopListeningForEscape = null;
 }
 
 function start() {
@@ -33,7 +33,7 @@ function start() {
   root = host.attachShadow({ mode: 'closed' });
   root.append(el('style', { textContent: resultCss + css }));
   document.documentElement.append(host);
-  window.addEventListener('keydown', onKey, true);
+  stopListeningForEscape = listenForEscape(window, teardown);
   beginSelection();
 }
 
@@ -47,7 +47,7 @@ function beginSelection() {
 
   const box = el('div', { class: 'box' });
   box.hidden = true;
-  const hint = el('div', { class: 'hint', textContent: 'Drag over the QR code · Esc to cancel' });
+  const hint = el('div', { class: 'hint', textContent: i18n('selectionHint') });
   const l = (layer = el('div', { class: 'layer' }, hint, box));
   root.append(l);
 
@@ -94,7 +94,7 @@ async function readSelection(rect: { x: number; y: number; w: number; h: number 
   try {
     response = await chrome.runtime.sendMessage({ type: 'capture', rect, viewportWidth: window.innerWidth });
   } catch {
-    response = { ok: false, error: 'The extension was reloaded. Refresh this page and try again.' };
+    response = { ok: false, error: i18n('extensionReloaded') };
   }
   if (!host) return; // closed while capturing
   host.style.visibility = '';
@@ -110,12 +110,12 @@ async function readSelection(rect: { x: number; y: number; w: number; h: number 
 function showPanel(content: HTMLElement) {
   if (!root) return;
   panel?.remove();
-  const again = el('button', { class: 'btn', type: 'button', textContent: 'Select again' });
-  const close = el('button', { class: 'btn icon', type: 'button', textContent: '✕', ariaLabel: 'Close', title: 'Close (Esc)' });
+  const again = el('button', { class: 'btn', type: 'button', textContent: i18n('selectAgain') });
+  const close = el('button', { class: 'btn icon', type: 'button', textContent: '✕', ariaLabel: i18n('close'), title: i18n('closeWithEscape') });
   again.addEventListener('click', beginSelection);
   close.addEventListener('click', teardown);
   const header = el('header', {}, el('h2', { textContent: 'AT QR' }), again, close);
-  panel = el('div', { class: 'panel', role: 'dialog', ariaLabel: 'AT QR code' },
+  panel = el('div', { class: 'panel', role: 'dialog', ariaLabel: i18n('dialogLabel') },
     header,
     el('div', { class: 'body' }, content));
   const draggablePanel = panel;

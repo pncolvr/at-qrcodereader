@@ -2,15 +2,18 @@
 // overlay asks us (message "capture") to screenshot the tab and decode the selected area.
 // If the page can't be scripted, fall back to a viewer tab showing a frozen capture.
 import { cropAndDecode, type Box } from './capture';
+import { i18n } from '../i18n';
+
+void chrome.action.setTitle({ title: i18n('actionTitle') });
 
 async function flagError(message: string) {
   console.error(message);
   await chrome.action.setBadgeBackgroundColor({ color: '#b3261e' });
   await chrome.action.setBadgeText({ text: '!' });
-  await chrome.action.setTitle({ title: `AT QR: ${message}` });
+  await chrome.action.setTitle({ title: i18n('actionError', message) });
   setTimeout(() => {
     chrome.action.setBadgeText({ text: '' });
-    chrome.action.setTitle({ title: 'Read AT QR code' });
+    chrome.action.setTitle({ title: i18n('actionTitle') });
   }, 4000);
 }
 
@@ -21,7 +24,7 @@ async function openViewer(tab: chrome.tabs.Tab) {
     await chrome.storage.session.set({ [`capture:${key}`]: dataUrl });
     await chrome.tabs.create({ url: chrome.runtime.getURL(`viewer.html?k=${key}`), index: tab.index + 1, openerTabId: tab.id });
   } catch (err) {
-    await flagError(err instanceof Error ? err.message : 'could not capture this page');
+    await flagError(err instanceof Error ? err.message : i18n('captureFailed'));
   }
 }
 
@@ -41,6 +44,6 @@ chrome.runtime.onMessage.addListener((msg: CaptureRequest, sender, sendResponse)
   (async () => {
     const dataUrl = await chrome.tabs.captureVisibleTab(sender.tab!.windowId, { format: 'png' });
     return { ok: true, text: await cropAndDecode(dataUrl, msg.rect, msg.viewportWidth) };
-  })().then(sendResponse, (err) => sendResponse({ ok: false, error: err instanceof Error ? err.message : 'Could not capture this page.' }));
+  })().then(sendResponse, (err) => sendResponse({ ok: false, error: err instanceof Error ? err.message : i18n('captureFailed') }));
   return true; // keep the channel open for the async response
 });

@@ -1,0 +1,154 @@
+{
+  "extensionName": {
+    "message": "Leitor de códigos QR AT"
+  },
+  "extensionDescription": {
+    "message": "Seleccione um código QR AT na página e consulte os respectivos campos."
+  },
+  "actionTitle": {
+    "message": "Ler código QR AT"
+  },
+  "actionError": {
+    "message": "Leitor QR AT: $message$",
+    "placeholders": { "message": { "content": "$1" } }
+  },
+  "captureFailed": {
+    "message": "Não foi possível capturar esta página."
+  },
+  "selectionHint": {
+    "message": "Arraste sobre o código QR · Esc para cancelar"
+  },
+  "extensionReloaded": {
+    "message": "A extensão foi recarregada. Actualize esta página e tente novamente."
+  },
+  "selectAgain": {
+    "message": "Seleccione novamente"
+  },
+  "close": {
+    "message": "Fechar"
+  },
+  "closeWithEscape": {
+    "message": "Fechar (Esc)"
+  },
+  "dialogLabel": {
+    "message": "Código QR AT"
+  },
+  "noQrFound": {
+    "message": "Não foi encontrado nenhum código QR na selecção. Seleccione uma área mais próxima do código ou aumente o zoom da página e tente novamente."
+  },
+  "invalidQr": {
+    "message": "Foi encontrado um código QR, mas não é um código QR AT válido."
+  },
+  "improvementMessage": {
+    "message": "Estamos a trabalhar numa nova versão e numa aplicação nativa para Windows.\nQuer saber mais?"
+  },
+  "improvementLink": {
+    "message": "Clique aqui"
+  },
+  "improvementLinkNewTab": {
+    "message": "Saiba mais (abre num novo separador)"
+  },
+  "qrFieldCount": {
+    "message": "Código QR AT · $count$ campos",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "qrInvalidFieldCount": {
+    "message": "Código QR AT · inválido · $count$ campos",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "formatValid": {
+    "message": "Formato QR AT válido"
+  },
+  "formatInvalid": {
+    "message": "Formato QR AT inválido"
+  },
+  "formatNoIssues": {
+    "message": "Não foram encontrados problemas de formato."
+  },
+  "formatSeeIssues": {
+    "message": "Consulte os campos assinalados abaixo."
+  },
+  "formatInvalidAriaOne": {
+    "message": "Formato QR AT inválido, um problema"
+  },
+  "formatInvalidAriaMany": {
+    "message": "Formato QR AT inválido, $count$ problemas",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "copy": {
+    "message": "Copiar"
+  },
+  "copied": {
+    "message": "Copiado"
+  },
+  "copyField": {
+    "message": "Copiar $field$",
+    "placeholders": { "field": { "content": "$1" } }
+  },
+  "warningMalformedSegment": {
+    "message": "Segmento malformado \"$segment$\" (esperado CODE:valor).",
+    "placeholders": { "segment": { "content": "$1" } }
+  },
+  "warningTooLong": {
+    "message": "O valor excede o máximo de $length$ caracteres.",
+    "placeholders": { "length": { "content": "$1" } }
+  },
+  "warningMissingField": {
+    "message": "Campo obrigatório $code$ ($field$) em falta.",
+    "placeholders": {
+      "code": { "content": "$1" },
+      "field": { "content": "$2" }
+    }
+  },
+  "warningEmptySegment": {
+    "message": "Segmento vazio (asterisco \"*\" isolado)."
+  },
+  "warningUnknownField": {
+    "message": "Campo não definido na especificação."
+  },
+  "warningEmptyValue": {
+    "message": "O valor não pode estar vazio."
+  },
+  "warningMoney": {
+    "message": "Esperado um número com duas casas decimais (por exemplo, 12.34)."
+  },
+  "warningDateFormat": {
+    "message": "Esperada uma data no formato AAAAMMDD."
+  },
+  "warningInvalidDate": {
+    "message": "A data indicada não é válida."
+  },
+  "warningOrder": {
+    "message": "A ordem não corresponde à especificação."
+  },
+  "warningDuplicate": {
+    "message": "Surge mais do que uma vez."
+  },
+  "otherFields": {
+    "message": "Outros"
+  },
+  "viewerTitle": {
+    "message": "Leitor de códigos QR AT"
+  },
+  "viewerHint": {
+    "message": "Arraste sobre o código QR para o seleccionar."
+  },
+  "captureLabel": {
+    "message": "Captura da página"
+  },
+  "captureAlt": {
+    "message": "Captura da página"
+  },
+  "noCapture": {
+    "message": "Não existe nenhuma captura carregada. Clique no botão da extensão numa página ou cole ou largue aqui uma imagem."
+  },
+  "resultLabel": {
+    "message": "Conteúdo do código QR"
+  },
+  "viewerPlaceholder": {
+    "message": "Seleccione o código QR na captura para consultar os respectivos campos."
+  },
+  "imageLoadFailed": {
+    "message": "Não foi possível carregar a imagem."
+  }
+}

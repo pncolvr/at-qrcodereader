@@ -1,12 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "AT QR Reader",
+  "name": "__MSG_extensionName__",
+  "default_locale": "en",
   "version": "0.1.0",
-  "description": "Select an AT QR code on the current page and see its fields in a table.",
+  "description": "__MSG_extensionDescription__",
   "minimum_chrome_version": "112",
   "permissions": ["activeTab", "scripting", "storage"],
   "background": { "service_worker": "background.js", "type": "module" },
-  "action": { "default_title": "Read AT QR code" },
+  "action": { "default_title": "__MSG_actionTitle__" },
   "commands": {
     "_execute_action": { "suggested_key": { "default": "Alt+Shift+Q" } }
   },
