@@ -12,16 +12,20 @@ export function formatMessage(entry: Message, substitutions: string | string[] =
   });
 }
 
-// Use the browser UI language, falling back to the user's preferred page language
-// when the extension API is unavailable (for example, in local previews).
-const uiLanguage = typeof chrome !== 'undefined' && chrome.i18n?.getUILanguage
-  ? chrome.i18n.getUILanguage()
-  : typeof navigator === 'undefined' ? 'en' : navigator.languages?.[0] ?? navigator.language ?? 'en';
-const locale = uiLanguage.toLowerCase().startsWith('pt') ? 'pt' : 'en';
+// Follow the user's preferred page languages, with Portuguese as the final fallback.
+// Browser UI language lookup kept for reference:
+// const uiLanguage = typeof chrome !== 'undefined' && chrome.i18n?.getUILanguage
+//   ? chrome.i18n.getUILanguage()
+//   : '';
+const pageLanguages = typeof navigator === 'undefined' ? []
+  : navigator.languages?.length ? navigator.languages : [navigator.language ?? ''];
+const locale = pageLanguages
+  .map((language) => language.toLowerCase().split(/[-_]/)[0])
+  .find((language) => language === 'pt' || language === 'en') ?? 'pt';
 const catalog = (locale === 'pt' ? ptMessages : enMessages) as Catalog;
 
 export function i18n(key: string, substitutions?: string | string[]): string {
-  const entry = catalog[key] ?? (enMessages as Catalog)[key];
+  const entry = catalog[key] ?? (ptMessages as Catalog)[key];
   if (!entry) return key;
   return formatMessage(entry, substitutions);
 }

@@ -1,25 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-PT">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title data-i18n="extensionName">AT QR Reader</title>
+  <title data-i18n="extensionName">Leitor de códigos QR AT</title>
   <link rel="stylesheet" href="viewer.css">
 </head>
 <body>
   <header>
-    <h1 data-i18n="extensionName">AT QR Reader</h1>
-    <p id="hint" data-i18n="viewerHint">Drag over the QR code to select it.</p>
+    <h1 data-i18n="extensionName">Leitor de códigos QR AT</h1>
+    <p id="hint" data-i18n="viewerHint">Arraste sobre o código QR para o seleccionar.</p>
   </header>
   <main>
-    <section id="capture" aria-label="Page capture" data-i18n-aria-label="captureLabel">
+    <section id="capture" aria-label="Captura da página" data-i18n-aria-label="captureLabel">
       <div id="stage" hidden>
-        <img id="shot" alt="Capture of the page" data-i18n-alt="captureAlt" draggable="false">
+        <img id="shot" alt="Captura da página" data-i18n-alt="captureAlt" draggable="false">
         <div id="sel" hidden></div>
       </div>
-      <p id="empty" data-i18n="noCapture">No capture loaded. Click the extension button on a page, or paste or drop an image here.</p>
+      <p id="empty" data-i18n="noCapture">Não existe nenhuma captura carregada. Clique no botão da extensão numa página ou cole ou largue aqui uma imagem.</p>
     </section>
-    <aside id="result" aria-live="polite" aria-label="QR code contents" data-i18n-aria-label="resultLabel"></aside>
+    <aside id="result" aria-live="polite" aria-label="Conteúdo do código QR" data-i18n-aria-label="resultLabel"></aside>
   </main>
   <script src="viewer.js"></script>
 </body>

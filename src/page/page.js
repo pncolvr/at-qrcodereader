@@ -37,7 +37,7 @@ function setLanguage(language) {
   const copy = translations[language];
   document.documentElement.lang = language === 'pt' ? 'pt-PT' : 'en';
   document.title = copy.pageTitle;
-  document.querySelector('.wordmark').setAttribute('aria-label', `${copy.brand} home`);
+  document.querySelector('.wordmark').setAttribute('aria-label', `${copy.brand} ${language === 'pt' ? '— início' : 'home'}`);
   document.querySelectorAll('[data-text]').forEach((element) => {
     element.textContent = copy[element.dataset.text];
   });
@@ -48,4 +48,9 @@ document.querySelectorAll('input[name="language"]').forEach((input) => {
   input.addEventListener('change', () => setLanguage(input.value));
 });
 
-setLanguage(navigator.language.toLowerCase().startsWith('pt') ? 'pt' : 'en');
+const pageLanguages = typeof navigator === 'undefined' ? []
+  : navigator.languages?.length ? navigator.languages : [navigator.language ?? ''];
+const initialLanguage = pageLanguages
+  .map((language) => language.toLowerCase().split(/[-_]/)[0])
+  .find((language) => language === 'pt' || language === 'en') ?? 'pt';
+setLanguage(initialLanguage);

@@ -5,11 +5,14 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe('extension UI language', () => {
   it.each([
-    ['pt-PT', 'en-US', 'Fechar'],
-    ['pt-BR', 'en-US', 'Fechar'],
-    ['en-US', 'pt-PT', 'Close'],
-    ['fr-FR', 'pt-PT', 'Close'],
-  ])('uses browser UI language %s over preferred language %s', async (uiLanguage, preferredLanguage, expected) => {
+    ['pt-PT', 'en-US', 'Close'],
+    ['pt-BR', 'en-US', 'Close'],
+    ['en-GB', 'pt-PT', 'Fechar'],
+    ['en-US', 'pt-BR', 'Fechar'],
+    ['fr-FR', 'pt-PT', 'Fechar'],
+    ['fr-FR', 'en-US', 'Close'],
+    ['fr-FR', 'de-DE', 'Fechar'],
+  ])('uses page preference when browser UI is %s and page preference is %s', async (uiLanguage, preferredLanguage, expected) => {
     vi.resetModules();
     vi.stubGlobal('chrome', { i18n: { getUILanguage: () => uiLanguage } });
     vi.stubGlobal('navigator', { language: preferredLanguage, languages: [preferredLanguage] });
@@ -28,10 +31,18 @@ describe('extension UI language', () => {
     expect(i18n('close')).toBe(expected);
   });
 
-  it('falls back to English without browser APIs', async () => {
+  it('falls back to Portuguese without browser APIs', async () => {
     vi.resetModules();
     vi.stubGlobal('chrome', undefined);
     vi.stubGlobal('navigator', undefined);
+    const { i18n } = await import('../src/extension/i18n');
+    expect(i18n('close')).toBe('Fechar');
+  });
+
+  it('tries supported page preferences before the final Portuguese fallback', async () => {
+    vi.resetModules();
+    vi.stubGlobal('chrome', { i18n: { getUILanguage: () => 'de-DE' } });
+    vi.stubGlobal('navigator', { languages: ['fr-FR', 'en-US'] });
     const { i18n } = await import('../src/extension/i18n');
     expect(i18n('close')).toBe('Close');
   });
