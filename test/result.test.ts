@@ -23,7 +23,8 @@ function find(root: Element, predicate: (element: Element) => boolean): Element[
 
 async function render(payload: string | null, language = 'en-US') {
   vi.resetModules();
-  vi.stubGlobal('navigator', { languages: [language] });
+  vi.stubGlobal('navigator', { language: 'en-US', languages: ['en-US'] });
+  vi.stubGlobal('chrome', { i18n: { getUILanguage: () => language } });
   vi.stubGlobal('document', { createElement: (tag: string) => new Element(tag) });
   const { renderResult } = await import('../src/extension/ui/result');
   return renderResult(payload) as unknown as Element;

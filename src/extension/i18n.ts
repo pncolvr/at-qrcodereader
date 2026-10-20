@@ -12,11 +12,12 @@ export function formatMessage(entry: Message, substitutions: string | string[] =
   });
 }
 
-export function preferredLocale(languages: readonly string[]): 'en' | 'pt' {
-  return languages[0]?.toLowerCase().startsWith('pt') ? 'pt' : 'en';
-}
-
-const locale = preferredLocale(typeof navigator === 'undefined' ? [] : navigator.languages ?? []);
+// Use the browser UI language, falling back to the user's preferred page language
+// when the extension API is unavailable (for example, in local previews).
+const uiLanguage = typeof chrome !== 'undefined' && chrome.i18n?.getUILanguage
+  ? chrome.i18n.getUILanguage()
+  : typeof navigator === 'undefined' ? 'en' : navigator.languages?.[0] ?? navigator.language ?? 'en';
+const locale = uiLanguage.toLowerCase().startsWith('pt') ? 'pt' : 'en';
 const catalog = (locale === 'pt' ? ptMessages : enMessages) as Catalog;
 
 export function i18n(key: string, substitutions?: string | string[]): string {
