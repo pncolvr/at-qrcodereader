@@ -73,10 +73,29 @@ Relative asset URLs support both repository Pages URLs and a custom domain.
 
 ## Chrome Store artifact
 
-The `Build extension artifact` workflow automatically sets a Chrome-compatible version
-from its Actions run number: run 1 produces `0.2.0.1`, run 2 produces `0.2.0.2`, and run 65536
-produces `0.2.1.0`. No manual bump is needed. The generated version updates the manifest,
-package, and lockfile in the CI checkout only; no commit or write permission is needed.
+The `Build extension artifact` workflow starts the three-part release series at `0.3.0`.
+It builds the extension, updates only `dist/extension/manifest.json`, and creates the ZIP
+using the same version. The source manifest, package, and lockfile keep their committed
+versions. Older four-part tags such as `v0.2.0.11` are ignored when calculating releases.
+
+After the first release, commit messages since the highest three-part release tag
+determine the next version. The largest applicable bump wins:
+
+| Commit message | Bump | Example after `0.3.0` |
+| --- | --- | --- |
+| `fix: handle a QR code` | Patch | `0.3.1` |
+| `feat: add a decoder` | Minor | `0.4.0` |
+| `feat!: change the result format` | Major | `1.0.0` |
+| Any commit with `BREAKING CHANGE: description` in its body/footer | Major | `1.0.0` |
+
+Scopes are supported, for example `feat(extension): add a decoder` and
+`fix(extension)!: change the result format`. Other commit types default to a patch bump.
+Breaking changes trigger a major bump even before `1.0.0`. With squash merges, put the
+intended message in the final squash commit.
+
+To override the automatic bump, open **Actions > Build extension artifact > Run workflow**
+and choose `patch`, `minor`, or `major` in **bump**. The default `auto` uses commit messages.
+The first release is always `0.3.0`, regardless of this selection.
 
 It runs on pushes to `main` or `master` that change `src/extension/**`, tests, extension
 build/release tooling, dependency files, TypeScript config, or its workflow. Page-only
@@ -91,11 +110,11 @@ Rerunning the same workflow replaces the ZIP on the existing release. The versio
 **Actions** artifact is also retained for 30 days as a separate download.
 Store listing, privacy disclosures, and review remain separate requirements; CI does not upload to the store.
 
-Re-running the same Actions run rebuilds the same version; start a new manual workflow
-run to get a new version. The run counter belongs to this workflow: if you recreate it or
-switch repositories, advance the `0.2` prefix in the workflow above all previously uploaded
-versions. The source version must stay below the generated versions. Each Chrome version
-component must be 0-65535, with no leading zeros; the packaging script validates this.
+Runs are serialized to avoid allocating the same version concurrently. Running the
+workflow on a commit already tagged with the latest release rebuilds that version,
+including manual runs; the bump selector applies when there are new commits.
+The built commit must contain the latest release in its history. Each Chrome version
+component must be 0-65535, with no leading zeros; the workflow validates this.
 
 For local builds, the committed version is used:
 
@@ -105,9 +124,9 @@ npm run package:extension
 
 The ZIP is written to `dist/artifacts/at-qr-reader-<version>.zip`. Production builds
 are minified and exclude source maps; watch builds include source maps for debugging.
-The manual alternative is described in workflow comments: disable the automatic step,
-then use `npm run version:extension -- <version>` to synchronize the manifest, package,
-and lockfile. Manual versions must exceed every version already uploaded to the store.
+For local version changes, `npm run version:extension -- <version>` synchronizes the source
+manifest, package, and lockfile. CI uses release tags and the workflow's **bump** selector
+to calculate its version independently.
 
 ## VS Code tasks
 
@@ -126,8 +145,27 @@ The preview is also available via **Build extension preview** or `npm run build:
 open `dist/preview/index.html` afterward. These local pages do not require a server.
 
 ## Tests
-`npm test` parses the 7 example messages from the spec, and renders each as a QR code (ECC M, 2 px
-per module, 2-module margin, as the spec asks) to check the decoder reads them back. `npm run typecheck` for types.
+
+Run all tests:
+
+```sh
+npm test
+```
+
+Run a specific test file:
+
+```sh
+npm test -- test/result.test.ts
+```
+
+Check TypeScript types:
+
+```sh
+npm run typecheck
+```
+
+The tests parse the 7 example messages from the spec and render each as a QR code
+(ECC M, 2 px per module, 2-module margin, as the spec asks) to check the decoder reads them back.
 
 ## Known limits / TODO
 - Field labels are the spec's Portuguese descriptions; the UI text is English.

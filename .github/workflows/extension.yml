@@ -13,30 +13,99 @@ on:
       - 'tsconfig.json'
       - '.github/workflows/extension.yml'
   workflow_dispatch:
+    inputs:
+      bump:
+        description: Release bump (auto uses commit messages; first release is 0.3.0)
+        type: choice
+        default: auto
+        options:
+          - auto
+          - patch
+          - minor
+          - major
 
 permissions:
   contents: write
+
+concurrency:
+  group: extension-release
+  cancel-in-progress: false
 
 jobs:
   package:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
       - run: npm ci
-      - name: Set automatic Chrome version
-        run: npm run version:extension -- "0.2.$((GITHUB_RUN_NUMBER / 65536)).$((GITHUB_RUN_NUMBER % 65536))"
-      # Manual alternative: disable the step above and commit a version bump before pushing.
-      # Run locally: npm run version:extension -- <version>
       - run: npm run typecheck
       - run: npm test
-      - run: npm run package:extension
-      - name: Read version
+      - run: npm run build:extension
+      - name: Version generated manifest
         id: version
-        run: node -e 'console.log("version=" + JSON.parse(require("fs").readFileSync("src/extension/public/manifest.json", "utf8")).version)' >> "$GITHUB_OUTPUT"
+        env:
+          RELEASE_BUMP: ${{ inputs.bump || 'auto' }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
+          import { execFileSync } from 'node:child_process';
+
+          const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim();
+          const parts = (version) => version.replace(/^v/, '').split('.').map(Number);
+          const tags = git('tag', '--list', 'v*').split('\n')
+            .filter((tag) => /^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/.test(tag))
+            .sort((a, b) => {
+              const left = parts(a), right = parts(b);
+              return right[0] - left[0] || right[1] - left[1] || right[2] - left[2];
+            });
+          const previous = tags[0];
+          let version = '0.3.0';
+          let bump = process.env.RELEASE_BUMP;
+          if (!['auto', 'patch', 'minor', 'major'].includes(bump)) {
+            throw new Error('Invalid release bump.');
+          }
+          if (previous) {
+            git('merge-base', '--is-ancestor', previous, 'HEAD');
+            version = previous.slice(1);
+            // Rebuild the same version if this commit is already released.
+            if (git('rev-parse', `${previous}^{commit}`) !== git('rev-parse', 'HEAD')) {
+              const messages = git('log', '--format=%B%x00', `${previous}..HEAD`).split('\0')
+                .map((message) => message.trim());
+              if (bump === 'auto') {
+                const breaking = messages.some((message) =>
+                  /^[a-z]+(?:\([^\r\n]+\))?!: /.test(message) || /^BREAKING[ -]CHANGE: /m.test(message));
+                const feature = messages.some((message) => /^feat(?:\([^\r\n]+\))?: /.test(message));
+                bump = breaking ? 'major' : feature ? 'minor' : 'patch';
+              }
+              const next = parts(version);
+              const index = { major: 0, minor: 1, patch: 2 }[bump];
+              next[index]++;
+              next.fill(0, index + 1);
+              version = next.join('.');
+            }
+          }
+          if (parts(version).some((part) => part > 65535) || parts(version).every((part) => part === 0)) {
+            throw new Error(`Invalid Chrome version: ${version}`);
+          }
+          const path = 'dist/extension/manifest.json';
+          const manifest = JSON.parse(readFileSync(path, 'utf8'));
+          manifest.version = version;
+          writeFileSync(path, `${JSON.stringify(manifest, null, 2)}\n`);
+          appendFileSync(process.env.GITHUB_OUTPUT, `version=${version}\n`);
+          console.log(`Generated extension version: ${version}`);
+          NODE
+      - name: Package extension
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          mkdir -p dist/artifacts
+          cd dist/extension
+          zip -r "../artifacts/at-qr-reader-${VERSION}.zip" .
       - uses: actions/upload-artifact@v4
         with:
           name: at-qr-reader-${{ steps.version.outputs.version }}

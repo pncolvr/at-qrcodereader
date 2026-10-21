@@ -27,7 +27,7 @@ function improvementLink(): HTMLElement {
   return el('footer', { class: 'improvement' },
     el('p', { class: 'improvement-message', textContent: i18n('improvementMessage') }), '\n',
     el('a', {
-      href: 'https://pncolvr.github.io/efatura-qr/',
+      href: 'https://pncolvr.github.io/at-qrcodereader/',
       target: '_blank',
       rel: 'noopener noreferrer',
       textContent: i18n('improvementLink'),

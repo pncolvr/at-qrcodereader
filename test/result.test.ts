@@ -78,7 +78,7 @@ describe('QR results', () => {
     expect(footer.textContent).toBe("We're working on a new version and a native Windows app.\nWant to know more?\nClick here");
     expect(find(footer, (node) => node.tag === 'a')).toEqual([
       expect.objectContaining({
-        href: 'https://pncolvr.github.io/efatura-qr/',
+        href: 'https://pncolvr.github.io/at-qrcodereader/',
         target: '_blank',
         rel: 'noopener noreferrer',
       }),
