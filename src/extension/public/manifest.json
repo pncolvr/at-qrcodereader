@@ -7,9 +7,12 @@
   "minimum_chrome_version": "112",
   "permissions": ["activeTab", "scripting", "storage"],
   "background": { "service_worker": "background.js", "type": "module" },
-  "action": { "default_title": "__MSG_actionTitle__" },
+  "action": {
+    "default_title": "__MSG_actionTitle__",
+    "default_icon": { "16": "icon-16.png", "24": "icon-24.png", "32": "icon-32.png" }
+  },
   "commands": {
     "_execute_action": { "suggested_key": { "default": "Alt+Shift+Q" } }
   },
-  "icons": { "16": "icon-16.png", "32": "icon-32.png", "48": "icon-48.png", "128": "icon-128.png" }
+  "icons": { "16": "icon-16.png", "24": "icon-24.png", "32": "icon-32.png", "48": "icon-48.png", "128": "icon-128.png" }
 }

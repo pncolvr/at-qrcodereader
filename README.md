@@ -23,6 +23,22 @@ Works in Chromium-based browsers (Chrome, Edge, Brave...). `npm run watch` rebui
 - Pages extensions can't script (`chrome://`, the Web Store) use a fallback: a viewer tab with a frozen capture
   (you can also paste or drop an image onto it).
 
+## Generate icons
+
+The source artwork is `assets/icon.png`. After editing the artwork, regenerate the site
+and extension icons with ImageMagick 7 (`magick`) or ImageMagick 6 (`convert`) installed:
+
+```sh
+npm run generate:icons
+npm run build
+```
+
+The script uses this artwork for the 16, 24, 32, 48, and 128-pixel extension
+icons, the 16 and 32-pixel site favicons, and `src/page/icon.png` at 144 pixels for the
+site's 72-pixel display size. It preserves transparency and aspect ratio,
+centering artwork on a square canvas. Keep the generated files in version
+control; regular builds do not require ImageMagick.
+
 ## How it works
 All extension source and static assets live under `src/extension/`. The independent signup site lives under `src/page/`.
 
