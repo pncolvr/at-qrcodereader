@@ -45,7 +45,7 @@ describe('QR results', () => {
   it('still displays the remaining fields when a core mandatory field is missing', async () => {
     const result = await render(INVALID_EXAMPLE.replace('*O:1.00', ''));
     expect(find(result, (node) => node.tag === 'table')).toHaveLength(1);
-    expect(result.textContent).toContain('FT TEST/0001');
+    expect(result.textContent).toContain('FT TESTE/0001');
     expect(result.textContent).toContain('Missing required field O (');
   });
 

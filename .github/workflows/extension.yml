@@ -6,11 +6,13 @@ on:
     paths:
       - 'src/extension/**'
       - 'test/**'
+      - 'tests/**'
       - 'scripts/build.mjs'
       - 'scripts/extension-release.mjs'
       - 'package.json'
       - 'package-lock.json'
       - 'tsconfig.json'
+      - 'playwright.config.ts'
       - '.github/workflows/extension.yml'
   workflow_dispatch:
     inputs:
@@ -45,7 +47,9 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
-      - run: npm run build:extension
+      - name: Install Chromium for browser tests
+        run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
       - name: Version generated manifest
         id: version
         env:

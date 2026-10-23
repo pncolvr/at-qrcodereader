@@ -16,16 +16,24 @@ let root: ShadowRoot | null = null;
 let layer: HTMLElement | null = null;
 let panel: HTMLElement | null = null;
 let stopListeningForEscape: (() => void) | null = null;
+let previousFocus: HTMLElement | null = null;
 
 function teardown() {
+  const restoreFocus = host && (document.activeElement === host || document.activeElement === document.body);
   host?.remove();
   host = root = layer = panel = null;
   stopListeningForEscape?.();
   stopListeningForEscape = null;
+  const focusTarget = previousFocus;
+  previousFocus = null;
+  if (restoreFocus && focusTarget?.isConnected) focusTarget.focus({ preventScroll: true });
 }
 
 function start() {
   teardown();
+  let focused = document.activeElement;
+  while (focused?.shadowRoot?.activeElement) focused = focused.shadowRoot.activeElement;
+  previousFocus = focused instanceof HTMLElement ? focused : null;
   host = el('div');
   host.id = 'at-qr-reader-host';
   // `all: initial` stops the page's inherited styles (font, color, ...) leaking into the shadow tree.
@@ -48,8 +56,18 @@ function beginSelection() {
   const box = el('div', { class: 'box' });
   box.hidden = true;
   const hint = el('div', { class: 'hint', textContent: i18n('selectionHint') });
-  const l = (layer = el('div', { class: 'layer' }, hint, box));
+  hint.id = 'at-qr-selection-hint';
+  const l = (layer = el('div', { class: 'layer', tabIndex: -1, role: 'dialog', ariaModal: 'true', ariaLabel: i18n('dialogLabel') }, hint, box));
+  l.setAttribute('aria-describedby', hint.id);
   root.append(l);
+  // Toolbar activation can leave focus inside an iframe. Its keyboard events
+  // never reach our top-frame Escape listener, so move focus into the overlay.
+  l.focus({ preventScroll: true });
+  l.addEventListener('keydown', (event) => {
+    if (event.key !== 'Tab') return;
+    event.preventDefault();
+    l.focus({ preventScroll: true });
+  });
 
   let origin: { x: number; y: number } | null = null;
   let rect = { x: 0, y: 0, w: 0, h: 0 };
@@ -87,16 +105,18 @@ const nextPaint = () => new Promise<void>((r) => requestAnimationFrame(() => req
 
 async function readSelection(rect: { x: number; y: number; w: number; h: number }) {
   if (!host) return;
+  const captureHost = host;
   // Hide our own UI so it isn't part of the screenshot.
-  host.style.visibility = 'hidden';
+  captureHost.style.visibility = 'hidden';
   await nextPaint();
+  if (host !== captureHost) return; // closed or restarted before the screenshot
   let response: CaptureResponse;
   try {
     response = await chrome.runtime.sendMessage({ type: 'capture', rect, viewportWidth: window.innerWidth });
   } catch {
     response = { ok: false, error: i18n('extensionReloaded') };
   }
-  if (!host) return; // closed while capturing
+  if (host !== captureHost) return; // closed or restarted while capturing
   host.style.visibility = '';
   layer?.remove();
   layer = null;
@@ -115,7 +135,7 @@ function showPanel(content: HTMLElement) {
   again.addEventListener('click', beginSelection);
   close.addEventListener('click', teardown);
   const header = el('header', {}, el('h2', { textContent: 'AT QR' }), again, close);
-  panel = el('div', { class: 'panel', role: 'dialog', ariaLabel: i18n('dialogLabel') },
+  panel = el('div', { class: 'panel', role: 'dialog', tabIndex: -1, ariaLabel: i18n('dialogLabel') },
     header,
     el('div', { class: 'body' }, content));
   const draggablePanel = panel;
@@ -147,6 +167,7 @@ function showPanel(content: HTMLElement) {
   header.addEventListener('pointercancel', stopDragging);
   header.addEventListener('lostpointercapture', stopDragging);
   root.append(panel);
+  panel.focus({ preventScroll: true });
 }
 
 // Clicking the toolbar button again re-runs this script; reuse the first instance.

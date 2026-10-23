@@ -14,12 +14,14 @@
     "package:extension": "npm run build:extension && node scripts/extension-release.mjs package",
     "version:extension": "node scripts/extension-release.mjs version",
     "test": "vitest run",
+    "test:browser": "npm run build:extension && playwright test",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "jsqr": "^1.4.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@types/chrome": "^0.3.5",
     "@types/qrcode": "^1.5.6",
     "esbuild": "^0.28.2",

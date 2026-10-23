@@ -146,7 +146,7 @@ open `dist/preview/index.html` afterward. These local pages do not require a ser
 
 ## Tests
 
-Run all tests:
+Run the unit tests:
 
 ```sh
 npm test
@@ -164,12 +164,25 @@ Check TypeScript types:
 npm run typecheck
 ```
 
-The tests parse the 7 example messages from the spec and render each as a QR code
+Run the browser regression tests (install Chromium once first):
+
+```sh
+npx playwright install chromium
+npm run test:browser
+```
+
+These tests build and load the real extension in isolated Chromium profiles and invoke
+its toolbar action. They cover first and repeated activations, focus in inputs and
+iframes, Escape, the results panel's close button, focus restoration, pending captures, real screenshot
+decoding, the built-in PDF viewer, and background worker restarts. The extension release
+workflow runs them before packaging. They do not use the preview's mocked capture response.
+
+The unit tests parse the 7 example messages from the spec and render each as a QR code
 (ECC M, 2 px per module, 2-module margin, as the spec asks) to check the decoder reads them back.
 
 ## Known limits / TODO
 - Field labels are the spec's Portuguese descriptions; the UI text is English.
 - Values such as `D:FT` are shown raw (the spec doesn't enumerate document types).
 - Spec v1.1 is from Oct 2020; check whether AT has published a later revision.
-- Not yet exercised in a real browser: only the core (parse + decode) is covered by automated tests.
-- The in-page overlay on Chrome's built-in PDF viewer is untested; if it doesn't appear there, that needs a closer look.
+- Browser automation covers Chromium; manual checks in installed Chrome remain useful for browser toolbar focus and native browser UI.
+- The built-in PDF viewer is tested in Chromium; local PDFs still require "Allow access to file URLs" in the extension settings.
