@@ -55,10 +55,13 @@ function beginSelection() {
 
   const box = el('div', { class: 'box' });
   box.hidden = true;
-  const hint = el('div', { class: 'hint', textContent: i18n('selectionHint') });
-  hint.id = 'at-qr-selection-hint';
+  const hintText = el('span', { textContent: i18n('selectionHint') });
+  hintText.id = 'at-qr-selection-hint';
+  const close = el('button', { class: 'btn icon', type: 'button', textContent: '✕', ariaLabel: i18n('close'), title: i18n('closeWithEscape') });
+  close.addEventListener('click', teardown);
+  const hint = el('div', { class: 'hint' }, hintText, close);
   const l = (layer = el('div', { class: 'layer', tabIndex: -1, role: 'dialog', ariaModal: 'true', ariaLabel: i18n('dialogLabel') }, hint, box));
-  l.setAttribute('aria-describedby', hint.id);
+  l.setAttribute('aria-describedby', hintText.id);
   root.append(l);
   // Toolbar activation can leave focus inside an iframe. Its keyboard events
   // never reach our top-frame Escape listener, so move focus into the overlay.
@@ -66,14 +69,14 @@ function beginSelection() {
   l.addEventListener('keydown', (event) => {
     if (event.key !== 'Tab') return;
     event.preventDefault();
-    l.focus({ preventScroll: true });
+    close.focus({ preventScroll: true });
   });
 
   let origin: { x: number; y: number } | null = null;
   let rect = { x: 0, y: 0, w: 0, h: 0 };
 
   l.addEventListener('pointerdown', (e) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || (e.target as Element).closest('.hint')) return;
     e.preventDefault();
     l.setPointerCapture(e.pointerId);
     origin = { x: e.clientX, y: e.clientY };

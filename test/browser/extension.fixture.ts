@@ -10,6 +10,8 @@ interface OverlayElement {
   height: number;
   focused: boolean;
   text: string;
+  background: string;
+  color: string;
 }
 
 interface Extension {
@@ -105,8 +107,10 @@ export const test = base.extend<{ extension: Extension }>({
               const element = this.querySelector(selector);
               if (!element) return null;
               const rect = element.getBoundingClientRect();
+              const style = getComputedStyle(element);
               return { x: rect.x, y: rect.y, width: rect.width, height: rect.height,
-                focused: this.activeElement === element, text: element.textContent };
+                focused: this.activeElement === element, text: element.textContent,
+                background: style.backgroundColor, color: style.color };
             }`,
             arguments: [{ value: selector }],
             returnByValue: true,

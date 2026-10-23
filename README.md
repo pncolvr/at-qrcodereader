@@ -67,7 +67,7 @@ The website does not send launch emails: that is a separate manual step using th
 
 In the repository's **Settings > Pages > Build and deployment**, select **GitHub Actions** as the source.
 The `Deploy signup page` workflow deploys only `dist/site`, never the extension files.
-It runs on pushes to `main` or `master` that change `src/page/**`, site build tooling,
+It runs on pushes to `master` that change `src/page/**`, site build tooling,
 dependency files, or the workflow itself. It can also be run manually from **Actions**.
 Relative asset URLs support both repository Pages URLs and a custom domain.
 
@@ -97,7 +97,7 @@ To override the automatic bump, open **Actions > Build extension artifact > Run 
 and choose `patch`, `minor`, or `major` in **bump**. The default `auto` uses commit messages.
 The first release is always `0.3.0`, regardless of this selection.
 
-It runs on pushes to `main` or `master` that change `src/extension/**`, tests, extension
+It runs on pushes to `master` that change `src/extension/**`, tests, extension
 build/release tooling, dependency files, TypeScript config, or its workflow. Page-only
 changes do not build an extension artifact. Shared tooling or dependency changes intentionally
 trigger both workflows. Manual runs are also supported.
@@ -173,7 +173,7 @@ npm run test:browser
 
 These tests build and load the real extension in isolated Chromium profiles and invoke
 its toolbar action. They cover first and repeated activations, focus in inputs and
-iframes, Escape, the results panel's close button, focus restoration, pending captures, real screenshot
+iframes, Escape, the hint and results close buttons, focus restoration, pending captures, real screenshot
 decoding, the built-in PDF viewer, and background worker restarts. The extension release
 workflow runs them before packaging. They do not use the preview's mocked capture response.
 

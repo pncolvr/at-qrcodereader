@@ -2,7 +2,7 @@ name: Build extension artifact
 
 on:
   push:
-    branches: [main, master]
+    branches: [master]
     paths:
       - 'src/extension/**'
       - 'test/**'

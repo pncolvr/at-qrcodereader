@@ -1,6 +1,13 @@
 .layer { position: fixed; inset: 0; cursor: crosshair; pointer-events: auto; background: rgba(0, 0, 0, .28); touch-action: none; user-select: none; outline: none; }
 .layer.dragging { background: transparent; }
-.hint { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); max-width: calc(100vw - 64px); padding: .45rem .9rem; border-radius: 999px; background: #16202a; color: #fff; font: 13px/1.3 system-ui, sans-serif; pointer-events: none; text-align: center; }
+.hint { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: .5rem; box-sizing: border-box; max-width: calc(100vw - 32px); padding: .4rem .5rem .4rem .8rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--text); box-shadow: 0 4px 12px rgb(0 0 0 / .2); font: 13px/1.3 system-ui, sans-serif; pointer-events: auto; text-align: center; }
+.hint[hidden] { display: none; }
+.hint > span { min-width: 0; pointer-events: none; }
+.hint .btn.icon { flex: none; min-width: 24px; min-height: 24px; padding: .15rem .3rem; line-height: 1; }
+.hint .btn.icon:hover { background: #f7cfcf; border-color: #d9a4a4; }
+@media (prefers-color-scheme: dark) {
+  .hint .btn.icon:hover { background: #542b32; border-color: #805057; }
+}
 .box { position: absolute; border: 2px solid #4c8dff; box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .35); pointer-events: none; }
 .panel {
   display: flex; flex-direction: column;
