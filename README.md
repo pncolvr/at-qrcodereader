@@ -100,6 +100,24 @@ Relative asset URLs support both repository Pages URLs and a custom domain.
 
 ## Chrome Store artifact
 
+The website link in the extension's fields panel, notices, and viewer can be
+configured with the build setting `EXTENSION_WEBSITE_URL`. It defaults to
+`https://pncolvr.github.io/at-qrcodereader/` when unset or blank.
+
+```sh
+EXTENSION_WEBSITE_URL='https://example.com/at-qr-reader/' npm run build:extension
+```
+
+The value must be an absolute HTTPS URL. The same setting applies to `npm run build`,
+`npm run build:preview`, `npm run watch`, and `npm run package:extension`.
+Restart watch mode after changing the setting.
+
+For GitHub builds, add `EXTENSION_WEBSITE_URL` under
+**Settings > Secrets and variables > Actions > Variables**, then run
+**Actions > Build extension artifact > Run workflow**. The URL is embedded in the
+extension bundle; changing the variable requires rebuilding and distributing an
+updated extension. It does not change an already installed extension.
+
 The `Build extension artifact` workflow starts the three-part release series at `0.3.0`.
 It builds the extension, updates only `dist/extension/manifest.json`, and creates the ZIP
 using the same version. The source manifest, package, and lockfile keep their committed
@@ -125,7 +143,7 @@ and choose `patch`, `minor`, or `major` in **bump**. The default `auto` uses com
 The first release is always `0.3.0`, regardless of this selection.
 
 It runs on pushes to `master` that change `src/extension/**`, extension tests and
-fixtures, `scripts/build-extension.mjs`, release tooling, dependency files,
+fixtures, `scripts/build-extension.mjs`, `scripts/extension-settings.mjs`, release tooling, dependency files,
 TypeScript config, or its workflow. Page source, page tests (`test/page*.test.*`),
 and page build tooling do not build an extension artifact. The extension build
 command runs its own script directly, independently of the combined/page build

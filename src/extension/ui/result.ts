@@ -22,12 +22,15 @@ export function el<K extends keyof HTMLElementTagNameMap>(
 
 const wrap = (...kids: Node[]) => el('div', { class: 'atqr' }, ...kids);
 const status = (message: string, warn = false) => el('p', { class: warn ? 'status warn' : 'status', textContent: message });
+const websiteUrl = typeof __EXTENSION_WEBSITE_URL__ === 'undefined'
+  ? 'https://pncolvr.github.io/at-qrcodereader/'
+  : __EXTENSION_WEBSITE_URL__;
 
 function improvementLink(): HTMLElement {
   return el('footer', { class: 'improvement' },
     el('p', { class: 'improvement-message', textContent: i18n('improvementMessage') }), '\n',
     el('a', {
-      href: 'https://pncolvr.github.io/at-qrcodereader/',
+      href: websiteUrl,
       target: '_blank',
       rel: 'noopener noreferrer',
       textContent: i18n('improvementLink'),

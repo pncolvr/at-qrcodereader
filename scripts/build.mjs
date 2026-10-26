@@ -13,6 +13,7 @@ if (!target || target === 'extension' || target === 'preview') {
 
 if (target === 'preview') {
   const { build } = await import('esbuild');
+  const { extensionBuildDefines } = await import('./extension-settings.mjs');
   const previewDir = 'dist/preview';
   rmSync(previewDir, { recursive: true, force: true });
   mkdirSync(previewDir, { recursive: true });
@@ -26,6 +27,7 @@ if (target === 'preview') {
     target: 'chrome112',
     sourcemap: true,
     loader: { '.css': 'text' },
+    define: extensionBuildDefines(),
     logLevel: 'info',
   });
 }

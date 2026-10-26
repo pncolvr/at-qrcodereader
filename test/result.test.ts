@@ -21,11 +21,12 @@ function find(root: Element, predicate: (element: Element) => boolean): Element[
   ];
 }
 
-async function render(payload: string | null, language = 'en-US') {
+async function render(payload: string | null, language = 'en-US', websiteUrl?: string) {
   vi.resetModules();
   vi.stubGlobal('navigator', { language, languages: [language] });
   vi.stubGlobal('chrome', { i18n: { getUILanguage: () => 'en-GB' } });
   vi.stubGlobal('document', { createElement: (tag: string) => new Element(tag) });
+  if (websiteUrl !== undefined) vi.stubGlobal('__EXTENSION_WEBSITE_URL__', websiteUrl);
   const { renderResult } = await import('../src/extension/ui/result');
   return renderResult(payload) as unknown as Element;
 }
@@ -33,6 +34,18 @@ async function render(payload: string | null, language = 'en-US') {
 afterEach(() => vi.unstubAllGlobals());
 
 describe('QR results', () => {
+  it.each([
+    { payload: EXAMPLES.simplificada, language: 'en-US' },
+    { payload: null, language: 'pt-PT' },
+  ])('uses the configured website for $language results and notices', async ({ payload, language }) => {
+    const websiteUrl = 'https://example.com/reader?source=extension&campaign=updates';
+    const result = await render(payload, language, websiteUrl);
+    const footer = result.children.at(-1) as Element;
+    expect(find(footer, (node) => node.tag === 'a')).toEqual([
+      expect.objectContaining({ href: websiteUrl, target: '_blank', rel: 'noopener noreferrer' }),
+    ]);
+  });
+
   it('keeps every existing field and displays invalid-value and missing-field warnings', async () => {
     const result = await render(INVALID_EXAMPLE);
     expect(find(result, (node) => node.className === 'code').map((node) => node.textContent)).toEqual(['A', 'B', 'D', 'F', 'G', 'N', 'O']);

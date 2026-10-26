@@ -9,6 +9,7 @@ on:
       - '!test/page*.test.*'
       - 'tests/**'
       - 'scripts/build-extension.mjs'
+      - 'scripts/extension-settings.mjs'
       - 'scripts/extension-release.mjs'
       - 'package.json'
       - 'package-lock.json'
@@ -37,6 +38,8 @@ concurrency:
 jobs:
   package:
     runs-on: ubuntu-latest
+    env:
+      EXTENSION_WEBSITE_URL: ${{ vars.EXTENSION_WEBSITE_URL }}
     steps:
       - uses: actions/checkout@v4
         with:
