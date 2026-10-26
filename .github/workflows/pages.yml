@@ -6,6 +6,7 @@ on:
     paths:
       - 'src/page/**'
       - 'scripts/build.mjs'
+      - 'scripts/build-page.mjs'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/pages.yml'
@@ -36,6 +37,7 @@ jobs:
       - run: npm run build:page
         env:
           GOOGLE_FORM_URL: ${{ vars.GOOGLE_FORM_URL }}
+          CHROME_WEB_STORE_URL: ${{ vars.CHROME_WEB_STORE_URL }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -58,22 +58,36 @@ The page offers English and Portuguese (Portugal), initially following the brows
 The signup link opens the configured Google Form in a new tab.
 No email is sent to or stored by GitHub Pages. Google Forms collects the responses.
 
-Set `GOOGLE_FORM_URL` to an absolute HTTPS URL when building the site:
+The site uses two build settings, both absolute HTTPS URLs when configured:
+
+| Variable | Purpose | When unset or empty |
+| --- | --- | --- |
+| `GOOGLE_FORM_URL` | Google Forms newsletter signup | Leaves the nonfunctional sample signup URL |
+| `CHROME_WEB_STORE_URL` | Published Chrome Web Store listing | Hides the installation button; signup remains the main action |
+
+When `CHROME_WEB_STORE_URL` is configured, **Install extension** becomes the main
+action and newsletter signup becomes secondary. Leave it empty until the listing is published.
+The page describes a Windows app as a possibility being explored.
+
+For a local build:
 
 ```sh
 GOOGLE_FORM_URL='https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform' npm run build:page
 ```
 
-For GitHub Pages, add a repository variable named `GOOGLE_FORM_URL` under
-**Settings > Secrets and variables > Actions > Variables**, then rerun the
-**Deploy signup page** workflow. An unset or empty variable leaves the nonfunctional
-sample URL (`https://example.invalid/signup`) in place. The setting applies to
-`dist/site`; opening the source HTML directly uses the sample URL.
+You can also set `CHROME_WEB_STORE_URL` in the same command once the listing is available.
+
+For GitHub Pages, add repository variables under
+**Settings > Secrets and variables > Actions > Variables**:
+`GOOGLE_FORM_URL` now, and `CHROME_WEB_STORE_URL` once published. After changing
+either variable, run **Actions > Deploy signup page > Run workflow** on `master`.
+These settings apply to `dist/site`; opening the source HTML directly uses
+the sample signup URL (`https://example.invalid/signup`) and hides installation.
 
 Before publishing, confirm the form is public, accepts responses, and contains an email field
-and clear consent for a release notification. Match the page's no-spam/no-sale promise in the
+and clear consent for updates about future versions. Match the page's no-spam/no-sale promise in the
 form and your handling of the responses; do not require respondents to sign in unnecessarily.
-The website does not send launch emails: that is a separate manual step using the form responses.
+The website does not send newsletter emails: that is a separate manual step using the form responses.
 
 ### GitHub Pages
 

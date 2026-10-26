@@ -4,32 +4,34 @@ const translations = {
     brandLead: 'AT',
     brandRest: 'QR Reader',
     language: 'Language',
-    status: 'Work in progress',
-    description: 'A Chrome extension to read the QR code on your Portuguese invoices and make sense of the details.',
-    title: 'A new version is on the way.',
-    invitation: "We're preparing a new version and a native Windows app.\nOur goal is to make reading your invoice QR codes and viewing the details even easier.\nLeave your email and we'll let you know as soon as they're ready.",
-    action: 'Notify me at launch',
-    privacy: "No spam. We'll never sell your email. Just a notification when we release.",
-    provider: 'Signup opens Google Forms. Your email is collected there, not on this website.',
+    status: 'Chrome extension',
+    description: 'Read the QR codes on Portuguese invoices directly in your browser and view the details in a simple, organized way.',
+    install: 'Install extension',
+    title: 'We want to make the reader even better.',
+    invitation: "We're exploring new features for AT QR Reader and the possibility of creating a Windows app.\n\nWe want to understand how we can make reading QR codes on Portuguese invoices even more useful.\n\nLeave your email to receive updates about future versions.",
+    action: 'Keep me updated',
+    privacy: "No spam. We'll never sell your email. Your data will only be used for communications you've agreed to receive.",
+    provider: 'Signup opens Google Forms, where your responses are collected.',
     newTab: ' (opens in a new tab)',
     footer: 'Made for the details that matter.',
-    pageTitle: 'AT QR Reader | Coming soon',
+    pageTitle: 'AT QR Reader | Portuguese invoices',
   },
   pt: {
     brand: 'Leitor de códigos QR AT',
     brandLead: 'Leitor de',
     brandRest: 'códigos QR AT',
     language: 'Idioma',
-    status: 'Em desenvolvimento',
-    description: 'Uma extensão para o Chrome que lê o código QR das suas faturas portuguesas e ajuda a compreender os detalhes.',
-    title: 'Uma nova versão está a caminho.',
-    invitation: 'Estamos a preparar uma nova versão e uma aplicação nativa para Windows.\nQueremos tornar a leitura dos códigos QR das suas faturas ainda mais simples e prática.\nDeixe o seu email e avisamos assim que estiverem disponíveis.',
-    action: 'Avisem-me no lançamento',
-    privacy: 'Sem spam. Nunca venderemos o seu email. Apenas uma notificação no lançamento.',
-    provider: 'A inscrição abre o Google Forms. O seu email é recolhido lá, não neste site.',
+    status: 'Extensão para o Chrome',
+    description: 'Leia os códigos QR das faturas portuguesas diretamente no seu navegador e consulte os dados de forma simples e organizada.',
+    install: 'Instalar extensão',
+    title: 'Queremos tornar o leitor ainda melhor.',
+    invitation: 'Estamos a explorar novas funcionalidades para o AT QR Reader e a possibilidade de criar uma aplicação para Windows.\n\nQueremos perceber como podemos tornar a leitura dos códigos QR das faturas portuguesas ainda mais útil.\n\nDeixe o seu email para receber novidades sobre futuras versões.',
+    action: 'Quero receber novidades',
+    privacy: 'Sem spam. Nunca venderemos o seu email. Os seus dados serão utilizados apenas para as comunicações autorizadas.',
+    provider: 'A inscrição abre o Google Forms, onde são recolhidas as suas respostas.',
     newTab: ' (abre num novo separador)',
     footer: 'Feito para os detalhes que importam.',
-    pageTitle: 'Leitor de códigos QR AT | Em breve',
+    pageTitle: 'Leitor de códigos QR AT | Faturas portuguesas',
   },
 };
 
@@ -37,6 +39,7 @@ function setLanguage(language) {
   const copy = translations[language];
   document.documentElement.lang = language === 'pt' ? 'pt-PT' : 'en';
   document.title = copy.pageTitle;
+  document.querySelector('meta[name="description"]').setAttribute('content', copy.description);
   document.querySelector('.wordmark').setAttribute('aria-label', `${copy.brand} ${language === 'pt' ? '— início' : 'home'}`);
   document.querySelectorAll('[data-text]').forEach((element) => {
     element.textContent = copy[element.dataset.text];
