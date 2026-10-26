@@ -22,6 +22,9 @@ Works in Chromium-based browsers (Chrome, Edge, Brave...). `npm run watch` rebui
 - PDFs opened from disk (`file://`) need "Allow access to file URLs" enabled on the extension.
 - Pages extensions can't script (`chrome://`, the Web Store) use a fallback: a viewer tab with a frozen capture
   (you can also paste or drop an image onto it).
+- If Chrome's temporary `activeTab` host permission is still propagating when the
+  toolbar action fires, script injection makes up to three attempts, 50 ms apart.
+  Persistent denials still open the viewer; other injection errors fall back immediately.
 
 ## Generate icons
 
@@ -228,7 +231,8 @@ workflow runs them before packaging. They do not use the preview's mocked captur
 Failed browser tests retain traces and screenshots in `test-results/`. CI uploads
 that directory as the `extension-browser-test-results` artifact for 7 days.
 Toolbar activation failures also include the target tab, open page URLs, and
-background worker console messages in `toolbar-activation.json`.
+background worker console messages in `toolbar-activation.json`. Injection failures
+log the original Chrome error before opening the fallback viewer.
 
 The unit tests parse the 7 example messages from the spec and render each as a QR code
 (ECC M, 2 px per module, 2-module margin, as the spec asks) to check the decoder reads them back.

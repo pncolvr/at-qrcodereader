@@ -48,6 +48,30 @@ for (const target of ['body', 'input', 'textarea', 'editable', 'shadow input', '
   });
 }
 
+test('a transient activeTab permission rejection opens one overlay without a fallback viewer', async ({ extension }) => {
+  await extension.worker.evaluate(() => {
+    const executeScript = chrome.scripting.executeScript.bind(chrome.scripting);
+    let attempts = 0;
+    Object.defineProperty(chrome.scripting, 'executeScript', {
+      value: async (injection: chrome.scripting.ScriptInjection<[], unknown>) => {
+        if (++attempts === 1) {
+          throw new Error('Cannot access contents of the page. Extension manifest must request permission to access the respective host.');
+        }
+        return executeScript(injection);
+      },
+    });
+  });
+  const pagesBefore = extension.context.pages().length;
+  await extension.action();
+  await expect(extension.page.locator('#at-qr-reader-host')).toHaveCount(1);
+  expect(extension.context.pages()).toHaveLength(pagesBefore);
+  await extension.page.keyboard.press('Escape');
+  await expect(extension.page.locator('#at-qr-reader-host')).toHaveCount(0);
+  await extension.action();
+  await extension.page.keyboard.press('Escape');
+  await expect(extension.page.locator('#at-qr-reader-host')).toHaveCount(0);
+});
+
 test('restarting selection with another action retains one overlay and Escape closes it', async ({ extension }) => {
   await extension.page.frameLocator('#cross-frame').locator('input').focus();
   await extension.action();

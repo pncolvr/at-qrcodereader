@@ -2,6 +2,7 @@
 // overlay asks us (message "capture") to screenshot the tab and decode the selected area.
 // If the page can't be scripted, fall back to a viewer tab showing a frozen capture.
 import { cropAndDecode, type Box } from './capture';
+import { injectSelection } from './inject';
 import { i18n } from '../i18n';
 
 void chrome.action.setTitle({ title: i18n('actionTitle') });
@@ -31,8 +32,9 @@ async function openViewer(tab: chrome.tabs.Tab) {
 chrome.action.onClicked.addListener(async (tab) => {
   if (tab.id === undefined) return;
   try {
-    await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['content.js'] });
-  } catch {
+    await injectSelection(tab.id);
+  } catch (error) {
+    console.warn('Could not inject the QR selection overlay; opening the viewer instead.', error);
     await openViewer(tab); // e.g. a page extensions aren't allowed to script
   }
 });
