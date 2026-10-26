@@ -55,8 +55,20 @@ All extension source and static assets live under `src/extension/`. The independ
 
 Open `src/page/index.html` or `dist/site/index.html` directly in a browser. No server is required.
 The page offers English and Portuguese (Portugal), initially following the browser language.
-The signup link in `src/page/index.html` opens the supplied Google Form in a new tab.
+The signup link opens the configured Google Form in a new tab.
 No email is sent to or stored by GitHub Pages. Google Forms collects the responses.
+
+Set `GOOGLE_FORM_URL` to an absolute HTTPS URL when building the site:
+
+```sh
+GOOGLE_FORM_URL='https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform' npm run build:page
+```
+
+For GitHub Pages, add a repository variable named `GOOGLE_FORM_URL` under
+**Settings > Secrets and variables > Actions > Variables**, then rerun the
+**Deploy signup page** workflow. An unset or empty variable leaves the nonfunctional
+sample URL (`https://example.invalid/signup`) in place. The setting applies to
+`dist/site`; opening the source HTML directly uses the sample URL.
 
 Before publishing, confirm the form is public, accepts responses, and contains an email field
 and clear consent for a release notification. Match the page's no-spam/no-sale promise in the

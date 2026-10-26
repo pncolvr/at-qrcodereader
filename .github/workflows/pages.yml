@@ -34,6 +34,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build:page
+        env:
+          GOOGLE_FORM_URL: ${{ vars.GOOGLE_FORM_URL }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
