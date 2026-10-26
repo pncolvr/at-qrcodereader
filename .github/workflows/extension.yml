@@ -6,8 +6,9 @@ on:
     paths:
       - 'src/extension/**'
       - 'test/**'
+      - '!test/page*.test.*'
       - 'tests/**'
-      - 'scripts/build.mjs'
+      - 'scripts/build-extension.mjs'
       - 'scripts/extension-release.mjs'
       - 'package.json'
       - 'package-lock.json'
@@ -46,10 +47,18 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
-      - run: npm test
+      - run: npm test -- --exclude 'test/page*.test.*'
       - name: Install Chromium for browser tests
         run: npx playwright install --with-deps chromium
       - run: npm run test:browser
+      - name: Upload browser test diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-browser-test-results
+          path: test-results
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Version generated manifest
         id: version
         env:

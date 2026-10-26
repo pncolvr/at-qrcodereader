@@ -7,10 +7,10 @@
   "scripts": {
     "generate:icons": "node scripts/generate-icons.mjs",
     "build": "node scripts/build.mjs",
-    "build:extension": "node scripts/build.mjs extension",
+    "build:extension": "node scripts/build-extension.mjs",
     "build:page": "node scripts/build.mjs page",
     "build:preview": "node scripts/build.mjs preview",
-    "watch": "node scripts/build.mjs extension --watch",
+    "watch": "node scripts/build-extension.mjs --watch",
     "package:extension": "npm run build:extension && node scripts/extension-release.mjs package",
     "version:extension": "node scripts/extension-release.mjs version",
     "test": "vitest run",

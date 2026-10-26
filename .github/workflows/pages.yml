@@ -7,6 +7,7 @@ on:
       - 'src/page/**'
       - 'scripts/build.mjs'
       - 'scripts/build-page.mjs'
+      - 'test/page*.test.*'
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/pages.yml'
@@ -34,6 +35,7 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci
+      - run: npm test -- test/page
       - run: npm run build:page
         env:
           GOOGLE_FORM_URL: ${{ vars.GOOGLE_FORM_URL }}

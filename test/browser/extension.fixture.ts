@@ -1,6 +1,6 @@
 import { test as base, expect, chromium, type BrowserContext, type CDPSession, type Page, type Worker } from '@playwright/test';
 import { createServer } from 'node:http';
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 interface OverlayElement {
@@ -43,7 +43,7 @@ async function overlayRoot(session: CDPSession) {
 }
 
 export const test = base.extend<{ extension: Extension }>({
-  extension: async ({}, use) => {
+  extension: async ({}, use, testInfo) => {
     const fixture = readFileSync(resolve('tests/test-qr-all-fields.html'), 'utf8');
     const qr = fixture.match(/src="(data:image\/png;base64,[^"]+)"/)![1];
     const server = createServer((request, response) => {
@@ -84,18 +84,41 @@ export const test = base.extend<{ extension: Extension }>({
       const installed = extensions.find((extension) => extension.path === path)!;
       expect(installed).toBeDefined();
       const worker = context.serviceWorkers()[0] ?? await context.waitForEvent('serviceworker');
+      const workerMessages: string[] = [];
+      worker.on('console', (message) => workerMessages.push(`${message.type()}: ${message.text()}`));
       await expect.poll(() => worker.evaluate(() => chrome.action.onClicked.hasListeners())).toBe(true);
       const page = await context.newPage();
       await page.goto(`http://127.0.0.1:${(server.address() as { port: number }).port}/`);
       const session = await context.newCDPSession(page);
       const action = async () => {
         await page.bringToFront();
+        // Tab activation and renderer focus can settle after bringToFront returns.
+        // Wait for the target to receive focus before granting activeTab via CDP.
+        await expect.poll(() => page.evaluate(() => document.hasFocus()), {
+          message: 'The toolbar target tab must have focus before activation',
+        }).toBe(true);
         const { targetInfos } = await browserSession.send('Target.getTargets', { filter: [{ type: 'tab', exclude: false }] });
-        const tab = targetInfos.find((target) => target.url === page.url())!;
+        const tab = targetInfos.find((target) => target.url === page.url());
+        expect(tab, 'The toolbar target tab must be registered with Chrome').toBeDefined();
         // Invoke the real action: activeTab permission, background worker, and
         // isolated-world script injection all run as they do on a toolbar click.
-        await browserSession.send('Extensions.triggerAction', { id: installed.id, targetId: tab.targetId });
-        await expect(page.locator('#at-qr-reader-host')).toHaveCount(1);
+        await browserSession.send('Extensions.triggerAction', { id: installed.id, targetId: tab!.targetId });
+        try {
+          await expect(page.locator('#at-qr-reader-host')).toHaveCount(1);
+        } catch (error) {
+          const diagnosticsPath = testInfo.outputPath('toolbar-activation.json');
+          writeFileSync(diagnosticsPath, JSON.stringify({
+            page: page.url(),
+            openPages: context!.pages().map((tab) => tab.url()),
+            target: tab,
+            workerMessages,
+          }, null, 2));
+          await testInfo.attach('toolbar-activation.json', {
+            path: diagnosticsPath,
+            contentType: 'application/json',
+          });
+          throw error;
+        }
       };
       const overlay = async (selector: string): Promise<OverlayElement | null> => {
         const objectId = await overlayRoot(session);
