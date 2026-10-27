@@ -18,11 +18,16 @@ function openPage(navigator?: { languages?: string[]; language?: string }) {
     content: '',
     setAttribute(_name: string, value: string) { this.content = value; },
   };
+  const privacyPolicyLink = {
+    href: '',
+    setAttribute(_name: string, value: string) { this.href = value; },
+  };
   const document = {
     documentElement: { lang: 'pt-PT' },
     title: '',
     querySelector(selector: string) {
       if (selector === '.wordmark') return { setAttribute() {} };
+      if (selector === '.privacy-policy-link') return privacyPolicyLink;
       if (selector === 'meta[name="description"]') return metaDescription;
       return selector.includes('"en"') ? inputs.en : inputs.pt;
     },
@@ -31,7 +36,7 @@ function openPage(navigator?: { languages?: string[]; language?: string }) {
     },
   };
   runInNewContext(script, { document, navigator });
-  return { document, inputs, textElements, metaDescription };
+  return { document, inputs, textElements, metaDescription, privacyPolicyLink };
 }
 
 describe('site language selection', () => {
@@ -61,10 +66,12 @@ describe('site language selection', () => {
   });
 
   it('translates every page label, action, and description in both languages', () => {
-    const { inputs, textElements, metaDescription } = openPage({ language: 'pt-PT' });
+    const { inputs, textElements, metaDescription, privacyPolicyLink } = openPage({ language: 'pt-PT' });
     const text = (key: string) => textElements.find((element) => element.dataset.text === key)?.textContent;
     expect(text('install')).toBe('Instalar extensão');
     expect(text('action')).toBe('Quero receber novidades');
+    expect(text('privacyPolicy')).toBe('Política de privacidade');
+    expect(privacyPolicyLink.href).toBe('privacy.html?lang=pt');
     expect(text('invitation')).toContain('possibilidade de criar uma aplicação para Windows');
     expect(metaDescription.content).toBe(text('description'));
     expect(textElements.every((element) => typeof element.textContent === 'string' && element.textContent.length > 0)).toBe(true);
@@ -72,12 +79,15 @@ describe('site language selection', () => {
     inputs.en.change();
     expect(text('install')).toBe('Install extension');
     expect(text('action')).toBe('Keep me updated');
+    expect(text('privacyPolicy')).toBe('Privacy policy');
+    expect(privacyPolicyLink.href).toBe('privacy.html?lang=en');
     expect(text('invitation')).toContain('possibility of creating a Windows app');
     expect(metaDescription.content).toBe(text('description'));
     expect(textElements.every((element) => typeof element.textContent === 'string' && element.textContent.length > 0)).toBe(true);
 
     inputs.pt.change();
     expect(text('action')).toBe('Quero receber novidades');
+    expect(privacyPolicyLink.href).toBe('privacy.html?lang=pt');
     expect(metaDescription.content).toBe(text('description'));
   });
 });

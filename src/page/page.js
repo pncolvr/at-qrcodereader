@@ -14,6 +14,7 @@ const translations = {
     provider: 'Signup opens Google Forms, where your responses are collected.',
     newTab: ' (opens in a new tab)',
     footer: 'Made for the details that matter.',
+    privacyPolicy: 'Privacy policy',
     pageTitle: 'AT QR Reader | Portuguese invoices',
   },
   pt: {
@@ -31,6 +32,7 @@ const translations = {
     provider: 'A inscrição abre o Google Forms, onde são recolhidas as suas respostas.',
     newTab: ' (abre num novo separador)',
     footer: 'Feito para os detalhes que importam.',
+    privacyPolicy: 'Política de privacidade',
     pageTitle: 'Leitor de códigos QR AT | Faturas portuguesas',
   },
 };
@@ -41,6 +43,7 @@ function setLanguage(language) {
   document.title = copy.pageTitle;
   document.querySelector('meta[name="description"]').setAttribute('content', copy.description);
   document.querySelector('.wordmark').setAttribute('aria-label', `${copy.brand} ${language === 'pt' ? '— início' : 'home'}`);
+  document.querySelector('.privacy-policy-link').setAttribute('href', `privacy.html?lang=${language}`);
   document.querySelectorAll('[data-text]').forEach((element) => {
     element.textContent = copy[element.dataset.text];
   });
